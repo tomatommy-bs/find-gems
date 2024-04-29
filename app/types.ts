@@ -1,5 +1,7 @@
-export type Poll = {
-  title: string;
-  options: string[];
-  votes?: number[];
-};
+import z from 'zod';
+
+export const zodCreateRoomDto = z.object({
+  userName: z.string(),
+});
+
+export type CreateRoomDto = z.infer<typeof zodCreateRoomDto>;
