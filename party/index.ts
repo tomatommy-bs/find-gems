@@ -1,12 +1,10 @@
 import {CreateRoomDto, zodCreateRoomDto} from '@/app/types';
-import {randomUUID} from 'crypto';
 import type * as Party from 'partykit/server';
 
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Party) {}
 
   async onRequest(req: Party.Request) {
-    const url = new URL(req.url);
     const data = zodCreateRoomDto.parse(await req.json());
     const id = this.createRoom(data);
     return Response.json({id});

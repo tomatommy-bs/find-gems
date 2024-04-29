@@ -4,8 +4,6 @@ import {redirect} from 'next/navigation';
 import {PARTYKIT_URL} from '../env';
 import {CreateRoomDto, zodCreateRoomDto} from '../types';
 
-const randomId = () => Math.random().toString(36).substring(2, 10);
-
 export async function createPoll(formData: FormData) {
   const data = parseData(formData);
 

@@ -3,7 +3,7 @@
 import {useRef, useState} from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import {createPoll} from '../(functions)/function';
+import {createPoll} from '../(functions)/create-room';
 
 export default function RoomMaker() {
   const [title, setTitle] = useState('');
