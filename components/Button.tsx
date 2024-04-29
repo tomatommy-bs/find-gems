@@ -1,15 +1,15 @@
 export default function Button({
-  theme = "dark",
+  theme = 'dark',
   className,
   children,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  theme?: "dark" | "light";
+  theme?: 'dark' | 'light';
 }) {
   const colors =
-    theme == "dark"
-      ? "button-dark bg-black text-white shadow-blue-600"
-      : "button-light bg-white text-blue-800 shadow-blue-200";
+    theme == 'dark'
+      ? 'button-dark bg-black text-white shadow-blue-600'
+      : 'button-light bg-white text-blue-800 shadow-blue-200';
 
   return (
     <button

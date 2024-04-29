@@ -1,28 +1,24 @@
-import Footer from "@/components/Footer";
-import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import Footer from '@/components/Footer';
+import './globals.css';
+import type {Metadata} from 'next';
+import {Inter} from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({subsets: ['latin']});
 
 const openGraphImage = {
-  title: "Instant, real-time polls built with PartyKit",
-  cta: "Create your own poll now",
+  title: 'Instant, real-time polls built with PartyKit',
+  cta: 'Create your own poll now',
 };
 
 export const metadata: Metadata = {
-  title: "Party poll!",
+  title: 'Party poll!',
   description: "Voting's better with friends 🎈",
   openGraph: {
     images: [`/api/og?${new URLSearchParams(openGraphImage)}`],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className={inter.className}>

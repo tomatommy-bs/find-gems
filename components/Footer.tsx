@@ -9,16 +9,16 @@ export default function Footer() {
           target="_blank"
         >
           Docs
-        </a>{" "}
-        |{" "}
+        </a>{' '}
+        |{' '}
         <a
           className="underline"
           href="https://github.com/partykit/partypoll"
           target="_blank"
         >
           GitHub
-        </a>{" "}
-        |{" "}
+        </a>{' '}
+        |{' '}
         <a
           className="underline"
           href="https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app"

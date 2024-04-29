@@ -1,10 +1,10 @@
-"use client";
-import React from "react";
+'use client';
+import React from 'react';
 
 export default React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>
->(function Input({ className, children, ...props }, ref) {
+>(function Input({className, children, ...props}, ref) {
   return (
     <input
       ref={ref}

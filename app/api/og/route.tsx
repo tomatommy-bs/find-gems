@@ -1,43 +1,43 @@
-import { ImageResponse } from "next/server";
+import {ImageResponse} from 'next/server';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+  const {searchParams} = new URL(request.url);
 
   let title =
-    searchParams.get("title") ?? "A live poll created using PartyKit!";
+    searchParams.get('title') ?? 'A live poll created using PartyKit!';
 
-  let cta = searchParams.get("cta");
+  let cta = searchParams.get('cta');
 
   if (title.length > 150) {
-    title = title.substring(0, 150) + "...";
+    title = title.substring(0, 150) + '...';
   }
 
   let size: string;
   if (title.length > 100) {
-    size = "text-6xl";
+    size = 'text-6xl';
   } else if (title.length > 50) {
-    size = "text-7xl";
+    size = 'text-7xl';
   } else if (title.length > 25) {
-    size = "text-8xl";
+    size = 'text-8xl';
   } else {
-    size = "text-9xl";
+    size = 'text-9xl';
   }
 
   return new ImageResponse(
     (
       <div
         style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
           background:
-            "linear-gradient(43deg,#4158d0 0%,#c850c0 46%,#ffcc70 100%)",
+            'linear-gradient(43deg,#4158d0 0%,#c850c0 46%,#ffcc70 100%)',
         }}
       >
         <div tw="flex h-full w-full px-18 pt-10 pb-24 flex-col justify-between">
@@ -71,8 +71,8 @@ function Balloon() {
       height="128"
       viewBox="0 0 128 128"
       style={{
-        height: "200px",
-        width: "200px",
+        height: '200px',
+        width: '200px',
       }}
     >
       <path

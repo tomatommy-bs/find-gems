@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export default function PollOptions({
   options,
@@ -22,10 +22,10 @@ export default function PollOptions({
             <div
               className={`absolute top-0 left-0 bottom-0 w-full rounded-md transition-all duration-500 z-10 ${
                 votes[i] === mostVotes
-                  ? "vote-bg-winning"
+                  ? 'vote-bg-winning'
                   : vote === i
-                  ? "vote-bg-own"
-                  : "vote-bg"
+                    ? 'vote-bg-own'
+                    : 'vote-bg'
               }`}
               style={{
                 width:
@@ -39,9 +39,9 @@ export default function PollOptions({
               <button
                 onClick={() => setVote(i)}
                 className={`flex flex-1 text-left py-2 ${
-                  vote === null ? "cursor-pointer" : "cursor-default"
+                  vote === null ? 'cursor-pointer' : 'cursor-default'
                 } ${
-                  vote === null ? "" : votes[i] === mostVotes ? "font-bold" : ""
+                  vote === null ? '' : votes[i] === mostVotes ? 'font-bold' : ''
                 }`}
               >
                 <span>

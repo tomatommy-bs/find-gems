@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import Button from "./Button";
-import Input from "./Input";
+import {useRef, useState} from 'react';
+import Button from './Button';
+import Input from './Input';
 
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 8;
 
 export default function PollMaker() {
-  const [newOption, setNewOption] = useState<string>("");
-  const [title, setTitle] = useState("");
+  const [newOption, setNewOption] = useState<string>('');
+  const [title, setTitle] = useState('');
   const [options, setOptions] = useState<string[]>([]);
   const newOptionRef = useRef<HTMLInputElement>(null);
   const addNewOption = () => {
     if (newOption?.trim().length !== 0) {
-      setOptions((prevOptions) => [...prevOptions, newOption]);
-      setNewOption("");
+      setOptions(prevOptions => [...prevOptions, newOption]);
+      setNewOption('');
     }
   };
 
@@ -23,7 +23,7 @@ export default function PollMaker() {
   const canSubmit =
     title.length > 0 &&
     options.length >= MIN_OPTIONS &&
-    options.filter((option) => option.trim().length === 0).length === 0;
+    options.filter(option => option.trim().length === 0).length === 0;
 
   return (
     <>
@@ -31,11 +31,11 @@ export default function PollMaker() {
         placeholder="Poll title"
         type="text"
         name="title"
-        className={"text-2xl font-bold"}
+        className={'text-2xl font-bold'}
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
+        onChange={e => setTitle(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
             e.preventDefault();
             newOptionRef.current?.focus();
           }
@@ -55,9 +55,9 @@ export default function PollMaker() {
               name="option-new"
               placeholder="New option"
               value={newOption}
-              onChange={(e) => setNewOption(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
+              onChange={e => setNewOption(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   if (newOption.length > 0) {
                     addNewOption();

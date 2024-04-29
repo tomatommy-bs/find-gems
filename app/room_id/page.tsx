@@ -1,19 +1,15 @@
-import { notFound } from "next/navigation";
-import { PARTYKIT_URL } from "@/app/env";
-import type { Poll } from "@/app/types";
+import {notFound} from 'next/navigation';
+import {PARTYKIT_URL} from '@/app/env';
+import type {Poll} from '@/app/types';
 
-import PollUI from "@/components/PollUI";
-import Balloon from "@/components/Balloon";
+import PollUI from '@/components/PollUI';
+import Balloon from '@/components/Balloon';
 
-export default async function PollPage({
-  params,
-}: {
-  params: { poll_id: string };
-}) {
+export default async function PollPage({params}: {params: {poll_id: string}}) {
   const pollId = params.poll_id;
 
   const req = await fetch(`${PARTYKIT_URL}/party/${pollId}`, {
-    method: "GET",
+    method: 'GET',
     next: {
       revalidate: 0,
     },
@@ -23,7 +19,7 @@ export default async function PollPage({
     if (req.status === 404) {
       notFound();
     } else {
-      throw new Error("Something went wrong.");
+      throw new Error('Something went wrong.');
     }
   }
 
@@ -46,14 +42,10 @@ export default async function PollPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { poll_id: string };
-}) {
+export async function generateMetadata({params}: {params: {poll_id: string}}) {
   const attrs = {
-    title: "A live poll created using PartyKit!",
-    cta: "Vote now!",
+    title: 'A live poll created using PartyKit!',
+    cta: 'Vote now!',
   };
 
   try {
@@ -65,7 +57,7 @@ export async function generateMetadata({
       }
     }
   } catch (e) {
-    console.error("Failed to generate metadata for poll page", e);
+    console.error('Failed to generate metadata for poll page', e);
   }
 
   return {
