@@ -1,9 +1,9 @@
 import Button from '@/components/Button';
-import RoomMaker from '@/app/(components)/RoomMaker';
+import RoomMaker from '@/app/_components/RoomMaker';
 import {redirect} from 'next/navigation';
-import {PARTYKIT_URL} from './env';
+import {PARTYKIT_URL} from '../env';
 import Input from '@/components/Input';
-import {createPoll} from './(functions)/create-room';
+import {createRoom} from '../_functions/create-room';
 
 export default function Home() {
   return (

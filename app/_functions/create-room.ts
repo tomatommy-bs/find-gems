@@ -2,9 +2,9 @@
 
 import {redirect} from 'next/navigation';
 import {PARTYKIT_URL} from '../env';
-import {CreateRoomDto, zodCreateRoomDto} from '../types';
+import {CreateRoomDto, zodCreateRoomDto} from '../(home)/types';
 
-export async function createPoll(formData: FormData) {
+export async function createRoom(formData: FormData) {
   const data = parseData(formData);
 
   const res = await fetch(`${PARTYKIT_URL}/party/1`, {

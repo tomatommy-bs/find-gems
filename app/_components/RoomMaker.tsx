@@ -3,13 +3,13 @@
 import {useRef, useState} from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import {createPoll} from '../(functions)/create-room';
+import {createRoom} from '../_functions/create-room';
 
 export default function RoomMaker() {
   const [title, setTitle] = useState('');
 
   return (
-    <form action={createPoll}>
+    <form action={createRoom}>
       <div className="space-y-4">
         <Input
           placeholder="your name"

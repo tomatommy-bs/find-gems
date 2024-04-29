@@ -1,7 +1,7 @@
 'use client';
 
 import {PARTYKIT_HOST} from '@/app/env';
-import {Poll} from '@/app/types';
+import {Poll} from '@/app/(home)/types';
 import usePartySocket from 'partysocket/react';
 import {useEffect, useState} from 'react';
 import PollOptions from './PollOptions';

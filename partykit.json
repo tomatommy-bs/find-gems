@@ -1,5 +1,8 @@
 {
   "name": "partypolls",
-  "main": "party/index.ts",
+  "main": "party/main.ts",
+  "parties": {
+    "room": "party/room.ts"
+  },
   "compatibilityDate": "2023-10-10"
 }

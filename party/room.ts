@@ -1,4 +1,4 @@
-import {CreateRoomDto, zodCreateRoomDto} from '@/app/types';
+import {CreateRoomDto, zodCreateRoomDto} from '@/app/(home)/types';
 import type * as Party from 'partykit/server';
 
 export default class Server implements Party.Server {
@@ -8,6 +8,13 @@ export default class Server implements Party.Server {
     const data = zodCreateRoomDto.parse(await req.json());
     const id = this.createRoom(data);
     return Response.json({id});
+  }
+
+  async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
+    const id = connection.id;
+
+    console.log('id', id);
+    this.party.storage.put(id, connection);
   }
 
   private createRoom(data: CreateRoomDto) {
