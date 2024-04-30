@@ -7,7 +7,8 @@
     "dev:party": "partykit dev",
     "build": "next build",
     "start": "next start",
-    "format": "next lint && prettier --write ."
+    "format": "next lint && prettier --write .",
+    "deploy:party": "partykit deploy"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",

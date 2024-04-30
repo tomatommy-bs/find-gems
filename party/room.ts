@@ -8,17 +8,27 @@ export default class Server implements Party.Server {
   async onRequest(req: Party.Request) {
     const data = zodCreateRoomDto.parse(await req.json());
     const id = this.createRoom(data);
-    console.log('id', id);
     return Response.json({id});
   }
 
-  async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
+  onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
     const id = connection.id;
 
     const data: ChatMessage = {
       type: 'system',
       sender: 'system',
       message: `${id} connected`,
+    };
+    this.party.broadcast(JSON.stringify(data));
+  }
+
+  onClose(connection: Party.Connection): void | Promise<void> {
+    const id = connection.id;
+
+    const data: ChatMessage = {
+      type: 'system',
+      sender: 'system',
+      message: `${id} disconnected`,
     };
     this.party.broadcast(JSON.stringify(data));
   }

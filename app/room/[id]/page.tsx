@@ -15,6 +15,7 @@ import usePartySocket from 'partysocket/react';
 import useWebSocket from 'partysocket/use-ws';
 import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
 import {ChatMessage} from './types';
+import {timeStamp} from 'console';
 
 export default function RoomPage({params}: {params: {id: string}}) {
   const [messages, setMessages] = useState<MessageEvent<ChatMessage>[]>([]);
@@ -27,6 +28,7 @@ export default function RoomPage({params}: {params: {id: string}}) {
     onMessage: msg => {
       const newMessage = {
         ...msg,
+        timeStamp: msg.timeStamp,
         data: JSON.parse(msg.data),
       };
       setMessages(msgs => [...msgs, newMessage]);
@@ -46,35 +48,30 @@ export default function RoomPage({params}: {params: {id: string}}) {
 
   return (
     <div className="flex h-full flex-col justify-between">
-      <div className="space-y-4">
-        <Card>
-          <p className="text-xl">Room : {params.id}</p>
-        </Card>
-
-        <div className="h-3/4 overflow-y-scroll  text-white">
-          {messages.map((msg, i) => (
-            <Fragment key={i}>
-              {msg.data.sender === 'system' && (
-                <p className="my-1 rounded-md bg-black bg-opacity-[0.2] text-center">
-                  {msg.data.message}
-                </p>
-              )}
-              {msg.data.sender === myConnectionId && (
-                <p className="chat chat-end" key={msg.timeStamp}>
+      <div className="h-3/4 overflow-y-scroll  text-white">
+        {messages.map((msg, i) => (
+          <Fragment key={i}>
+            {msg.data.sender === 'system' && (
+              <p className="my-1 rounded-md bg-black bg-opacity-[0.2] text-center">
+                {msg.data.message}
+              </p>
+            )}
+            {msg.data.sender === myConnectionId && (
+              <p className="chat chat-end" key={msg.timeStamp}>
+                <span className="chat-bubble">{msg.data.message}</span>
+              </p>
+            )}
+            {msg.data.sender !== myConnectionId &&
+              msg.data.sender !== 'system' && (
+                <div>
                   <span>{msg.data.sender}</span>
-                  <span className="chat-bubble">{msg.data.message}</span>
-                  <span>{msg.timeStamp}</span>
-                </p>
-              )}
-              {msg.data.sender !== myConnectionId &&
-                msg.data.sender !== 'system' && (
                   <p className="chat chat-start" key={msg.timeStamp}>
                     <span className="chat-bubble">{msg.data.message}</span>
                   </p>
-                )}
-            </Fragment>
-          ))}
-        </div>
+                </div>
+              )}
+          </Fragment>
+        ))}
       </div>
 
       <div className="flex">

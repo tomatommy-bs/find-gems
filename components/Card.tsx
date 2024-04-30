@@ -4,7 +4,7 @@ interface Props {
 
 const Card: React.FC<Props> = props => {
   return (
-    <div className="relative size-full bg-white p-8 md:h-auto md:rounded-xl md:shadow-xl">
+    <div className="relative size-full h-auto rounded-xl bg-white p-8 shadow-xl">
       {props.children}
     </div>
   );
