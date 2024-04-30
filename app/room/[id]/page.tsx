@@ -47,6 +47,8 @@ export default function RoomPage({params}: {params: {id: string}}) {
     await startGame(params.id);
   };
 
+  console.log('messages', messages);
+
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="h-3/4 overflow-y-scroll  text-white">

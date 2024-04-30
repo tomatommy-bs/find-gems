@@ -1,4 +1,9 @@
-import {ChestInfoKnownByPlayer, Gem} from '@/types/game';
+import {
+  ChestInfoKnownByPlayer,
+  Gem,
+  WAITING_FOR_STATE,
+  waitingForState,
+} from '@/types/game';
 import {CHEST_DIRECTION, ChestDirection} from './constants';
 import {Player} from './Player';
 import {Chest} from './Chest';
@@ -17,6 +22,7 @@ export class Board {
   public playerOnN: Player = new Player({name: 'N', position: 'N'});
   public playerOnS: Player = new Player({name: 'S', position: 'S'});
   public readonly isNPlayerFirst: boolean;
+  public waitingFor: waitingForState = WAITING_FOR_STATE.startGame;
 
   constructor(args: {isNPlayerFirst: boolean}) {
     this.chests = _.shuffle([
@@ -28,6 +34,7 @@ export class Board {
       new Chest({pattern: '4', direction: this.getShuffledDirection()}),
     ]) as [Chest, Chest, Chest, Chest, Chest, Chest];
     this.isNPlayerFirst = args.isNPlayerFirst;
+    this.updateWaitingForState();
   }
 
   /**
@@ -45,6 +52,7 @@ export class Board {
         `Player ${playerPosition} has already checked other one chest!`
       );
 
+    this.updateWaitingForState();
     return chest.checkNumberOfGems(player);
   }
 
@@ -70,9 +78,10 @@ export class Board {
     const chest = this.chests[chestIndex];
     const player = playerPosition === 'N' ? this.playerOnN : this.playerOnS;
     chest.putStone(player);
+    this.updateWaitingForState();
   }
 
-  public whatShouldDoNext(): string {
+  public updateWaitingForState(): waitingForState {
     const numberOfCheckedChest =
       this.getCheckedChests('N').length + this.getCheckedChests('S').length;
     const numberOfStonesOnChests = _.sumBy(
@@ -80,17 +89,17 @@ export class Board {
       chest => chest.stones.length
     );
 
-    if (this.isFinished()) return SHOULD_DO_NEXT.END;
+    if (this.isFinished()) return WAITING_FOR_STATE.restartGame;
 
     switch (numberOfCheckedChest) {
       case 0:
         return this.isNPlayerFirst
-          ? SHOULD_DO_NEXT.CHECK_CHEST_N
-          : SHOULD_DO_NEXT.CHECK_CHEST_S;
+          ? WAITING_FOR_STATE.NCheckChest
+          : WAITING_FOR_STATE.SCheckChest;
       case 1:
         return this.isNPlayerFirst
-          ? SHOULD_DO_NEXT.PUT_STONE_S
-          : SHOULD_DO_NEXT.PUT_STONE_N;
+          ? WAITING_FOR_STATE.SCheckChest
+          : WAITING_FOR_STATE.NCheckChest;
       case 2:
         break;
       default:
@@ -99,12 +108,12 @@ export class Board {
 
     if (numberOfStonesOnChests % 2 === 0) {
       return this.isNPlayerFirst
-        ? SHOULD_DO_NEXT.CHECK_CHEST_N
-        : SHOULD_DO_NEXT.CHECK_CHEST_S;
+        ? WAITING_FOR_STATE.NPutStone
+        : WAITING_FOR_STATE.SPutStone;
     } else {
       return this.isNPlayerFirst
-        ? SHOULD_DO_NEXT.PUT_STONE_S
-        : SHOULD_DO_NEXT.PUT_STONE_N;
+        ? WAITING_FOR_STATE.SPutStone
+        : WAITING_FOR_STATE.NPutStone;
     }
   }
 
