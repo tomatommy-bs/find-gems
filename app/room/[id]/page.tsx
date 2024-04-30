@@ -51,18 +51,19 @@ export default function RoomPage({params}: {params: {id: string}}) {
       <div className="h-3/4 overflow-y-scroll  text-white">
         {messages.map((msg, i) => (
           <Fragment key={i}>
-            {msg.data.sender === 'system' && (
+            {msg.data.type === 'presence' && (
               <p className="my-1 rounded-md bg-black bg-opacity-[0.2] text-center">
                 {msg.data.message}
               </p>
             )}
-            {msg.data.sender === myConnectionId && (
-              <p className="chat chat-end" key={msg.timeStamp}>
-                <span className="chat-bubble">{msg.data.message}</span>
-              </p>
-            )}
+            {msg.data.type === 'message' &&
+              msg.data.sender === myConnectionId && (
+                <p className="chat chat-end" key={msg.timeStamp}>
+                  <span className="chat-bubble">{msg.data.message}</span>
+                </p>
+              )}
             {msg.data.sender !== myConnectionId &&
-              msg.data.sender !== 'system' && (
+              msg.data.type === 'message' && (
                 <div>
                   <span>{msg.data.sender}</span>
                   <p className="chat chat-start" key={msg.timeStamp}>
@@ -74,6 +75,7 @@ export default function RoomPage({params}: {params: {id: string}}) {
         ))}
       </div>
 
+      <button className="btn btn-block">start game</button>
       <div className="flex">
         <Input ref={inputRef} placeholder="message" className="grow" />
         <button className="btn btn-primary" onClick={sendMessage}>

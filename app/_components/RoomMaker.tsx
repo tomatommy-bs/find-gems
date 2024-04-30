@@ -7,9 +7,19 @@ import {createRoom} from '../_functions/create-room';
 
 export default function RoomMaker() {
   const [title, setTitle] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsLoading(true);
+    try {
+      await createRoom(formData);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <form action={createRoom}>
+    <form action={handleSubmit}>
       <div className="space-y-4">
         <Input
           placeholder="your name"
@@ -18,7 +28,12 @@ export default function RoomMaker() {
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
-        <Button type="submit">Create Room</Button>
+        <button
+          type="submit"
+          className={`btn btn-primary btn-block ${isLoading && 'loading loading-dots'}`}
+        >
+          Create Room
+        </button>
       </div>
     </form>
   );

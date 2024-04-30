@@ -15,7 +15,7 @@ export default class Server implements Party.Server {
     const id = connection.id;
 
     const data: ChatMessage = {
-      type: 'system',
+      type: 'presence',
       sender: 'system',
       message: `${id} connected`,
     };
@@ -26,7 +26,7 @@ export default class Server implements Party.Server {
     const id = connection.id;
 
     const data: ChatMessage = {
-      type: 'system',
+      type: 'presence',
       sender: 'system',
       message: `${id} disconnected`,
     };

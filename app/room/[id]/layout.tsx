@@ -12,7 +12,7 @@ export default function RootLayout({
 
   return (
     <div className="size-full">
-      <div className="mb-4 flex items-center space-x-4">
+      <div className="flex items-center space-x-4">
         <Link href={'/'}>
           <button className="btn btn-outline">
             <HomeIcon className="w-8" /> home
