@@ -88,16 +88,17 @@ export class Board {
       this.chests,
       chest => chest.stones.length
     );
+    let newState: waitingForState;
 
-    if (this.isFinished()) return WAITING_FOR_STATE.restartGame;
+    if (this.isFinished()) newState = WAITING_FOR_STATE.restartGame;
 
     switch (numberOfCheckedChest) {
       case 0:
-        return this.isNPlayerFirst
+        newState = this.isNPlayerFirst
           ? WAITING_FOR_STATE.NCheckChest
           : WAITING_FOR_STATE.SCheckChest;
       case 1:
-        return this.isNPlayerFirst
+        newState = this.isNPlayerFirst
           ? WAITING_FOR_STATE.SCheckChest
           : WAITING_FOR_STATE.NCheckChest;
       case 2:
@@ -107,14 +108,16 @@ export class Board {
     }
 
     if (numberOfStonesOnChests % 2 === 0) {
-      return this.isNPlayerFirst
+      newState = this.isNPlayerFirst
         ? WAITING_FOR_STATE.NPutStone
         : WAITING_FOR_STATE.SPutStone;
     } else {
-      return this.isNPlayerFirst
+      newState = this.isNPlayerFirst
         ? WAITING_FOR_STATE.SPutStone
         : WAITING_FOR_STATE.NPutStone;
     }
+    this.waitingFor = newState;
+    return newState;
   }
 
   public isFinished(): boolean {

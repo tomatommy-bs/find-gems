@@ -30,7 +30,7 @@ export const zodCreateRoomDto = zodRoomApiDto.extend({
 export type CreateRoomDto = z.infer<typeof zodCreateRoomDto>;
 
 export const zodStartGameDto = zodRoomApiDto.extend({
-  command: z.literal('start-game'),
+  command: z.literal(WAITING_FOR_STATE.startGame),
 });
 export type StartGameDto = z.infer<typeof zodStartGameDto>;
 
@@ -79,6 +79,7 @@ export const zodRoomMessage = z.object({
   sender: z.string(),
   message: z.string(),
 });
+export type RoomMessage = z.infer<typeof zodRoomMessage>;
 
 export const zodChatMessage = zodRoomMessage.extend({
   type: z.literal('chat'),

@@ -43,31 +43,30 @@ export default class Server implements Party.Server {
           },
         };
         this.party.broadcast(JSON.stringify(resDataForNPlayer));
-
-        return new Response();
+        return Response.json({});
       }
       case WAITING_FOR_STATE.NCheckChest: {
         const data = zodCheckChestDto.parse(json);
         this.gameMaster.checkChest('N', data.chestIndex);
-        return new Response();
+        return Response.json({});
       }
       case WAITING_FOR_STATE.SCheckChest: {
         const data = zodCheckChestDto.parse(json);
         this.gameMaster.checkChest('S', data.chestIndex);
-        return new Response();
+        return Response.json({});
       }
       case WAITING_FOR_STATE.NPutStone: {
         const data = zodPutStoneDto.parse(json);
         this.gameMaster.putStone('N', data.chestIndex);
-        return new Response();
+        return Response.json({});
       }
       case WAITING_FOR_STATE.SPutStone: {
         const data = zodPutStoneDto.parse(json);
         this.gameMaster.putStone('S', data.chestIndex);
-        return new Response();
+        return Response.json({});
       }
       case WAITING_FOR_STATE.restartGame: {
-        return new Response();
+        return Response.json({});
       }
       default:
         throw new Error(command satisfies never);

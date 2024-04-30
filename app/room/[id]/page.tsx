@@ -11,11 +11,14 @@ import {
 } from '@heroicons/react/16/solid';
 import usePartySocket from 'partysocket/react';
 import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
-import {ChatMessage} from '@/party/room/type';
+import {ChatMessage, RoomMessage, SyncGameMessage} from '@/party/room/type';
 import {startGame} from './functions';
 
 export default function RoomPage({params}: {params: {id: string}}) {
-  const [messages, setMessages] = useState<MessageEvent<ChatMessage>[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [gameState, setGameState] = useState<
+    SyncGameMessage['gameState'] | null
+  >(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const ws = usePartySocket({
@@ -23,12 +26,13 @@ export default function RoomPage({params}: {params: {id: string}}) {
     party: 'room',
     room: params.id,
     onMessage: msg => {
-      const newMessage = {
-        ...msg,
-        timeStamp: msg.timeStamp,
-        data: JSON.parse(msg.data),
-      };
-      setMessages(msgs => [...msgs, newMessage]);
+      const data = JSON.parse(msg.data) as RoomMessage;
+      if (data.type === 'chat') {
+        setMessages(msgs => [...msgs, data as ChatMessage]);
+      }
+      if (data.type === 'sync-game') {
+        setGameState((data as SyncGameMessage).gameState);
+      }
     },
   });
   const myConnectionId = useMemo(() => {
@@ -43,37 +47,33 @@ export default function RoomPage({params}: {params: {id: string}}) {
     }
   };
 
-  const handleStartGame = async () => {
-    await startGame(params.id);
+  const handleStartGame = () => {
+    startGame(params.id);
   };
-
-  console.log('messages', messages);
 
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="h-3/4 overflow-y-scroll  text-white">
         {messages.map((msg, i) => (
           <Fragment key={i}>
-            {msg.data.messageType === 'presence' && (
+            {msg.messageType === 'presence' && (
               <p className="my-1 rounded-md bg-black bg-opacity-[0.2] text-center">
-                {msg.data.message}
+                {msg.message}
               </p>
             )}
-            {msg.data.messageType === 'message' &&
-              msg.data.sender === myConnectionId && (
-                <p className="chat chat-end" key={msg.timeStamp}>
-                  <span className="chat-bubble">{msg.data.message}</span>
+            {msg.messageType === 'message' && msg.sender === myConnectionId && (
+              <p className="chat chat-end" key={i}>
+                <span className="chat-bubble">{msg.message}</span>
+              </p>
+            )}
+            {msg.sender !== myConnectionId && msg.messageType === 'message' && (
+              <div>
+                <span>{msg.sender}</span>
+                <p className="chat chat-start" key={i}>
+                  <span className="chat-bubble">{msg.message}</span>
                 </p>
-              )}
-            {msg.data.sender !== myConnectionId &&
-              msg.data.messageType === 'message' && (
-                <div>
-                  <span>{msg.data.sender}</span>
-                  <p className="chat chat-start" key={msg.timeStamp}>
-                    <span className="chat-bubble">{msg.data.message}</span>
-                  </p>
-                </div>
-              )}
+              </div>
+            )}
           </Fragment>
         ))}
       </div>

@@ -1,12 +1,13 @@
+import {PARTYKIT_URL} from '@/app/env';
 import {StartGameDto} from '@/party/room/type';
+import {WAITING_FOR_STATE} from '@/types/game';
 
 export const startGame = async (roomId: string) => {
   const dto: StartGameDto = {
-    command: 'start-game',
+    command: WAITING_FOR_STATE.startGame,
   };
-  const res = await fetch(`/api/room/${roomId}`, {
+  await fetch(`${PARTYKIT_URL}/parties/room/${roomId}`, {
     method: 'POST',
     body: JSON.stringify(dto),
   });
-  return res.json();
 };
