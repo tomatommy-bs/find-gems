@@ -2,7 +2,7 @@
 
 import {redirect} from 'next/navigation';
 import {PARTYKIT_URL} from '../env';
-import {CreateRoomDto, zodCreateRoomDto} from '../(home)/types';
+import {CreateRoomDto, zodCreateRoomDto} from '@/party/room/type';
 
 export async function createRoom(formData: FormData) {
   const data = parseData(formData);
@@ -21,9 +21,10 @@ export async function createRoom(formData: FormData) {
 }
 
 function parseData(data: FormData): CreateRoomDto {
-  const _data: Record<string, unknown> = {};
-
-  _data.userName = data.get('user-name');
+  const _data = {
+    command: 'create-room',
+    userName: data.get('user-name'),
+  };
 
   return zodCreateRoomDto.parse(_data);
 }
