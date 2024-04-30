@@ -2,8 +2,7 @@
   "name": "find-gems",
   "main": "party/main.ts",
   "parties": {
-    "room": "party/room.ts",
-    "presence": "party/presence.ts"
+    "room": "party/room.ts"
   },
   "compatibilityDate": "2023-10-10"
 }

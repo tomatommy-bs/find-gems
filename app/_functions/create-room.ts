@@ -7,7 +7,7 @@ import {CreateRoomDto, zodCreateRoomDto} from '../(home)/types';
 export async function createRoom(formData: FormData) {
   const data = parseData(formData);
 
-  const res = await fetch(`${PARTYKIT_URL}/party/room`, {
+  const res = await fetch(`${PARTYKIT_URL}/parties/room/1`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

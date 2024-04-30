@@ -10,12 +10,6 @@ import usePartySocket from 'partysocket/react';
 import Card from '@/components/Card';
 
 export default function Home() {
-  const socket = usePartySocket({
-    host: PARTYKIT_HOST,
-    party: 'presence',
-    room: 'home',
-  });
-
   return (
     <div className="flex h-full items-center">
       <Card>

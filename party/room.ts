@@ -8,6 +8,7 @@ export default class Server implements Party.Server {
   async onRequest(req: Party.Request) {
     const data = zodCreateRoomDto.parse(await req.json());
     const id = this.createRoom(data);
+    console.log('id', id);
     return Response.json({id});
   }
 
