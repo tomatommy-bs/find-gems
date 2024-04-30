@@ -17,7 +17,7 @@ export default function Home() {
   });
 
   return (
-    <div className="h-full items-center flex">
+    <div className="flex h-full items-center">
       <Card>
         <RoomMaker />
       </Card>
