@@ -1,5 +1,5 @@
 {
-  "name": "partypolls",
+  "name": "find-gems",
   "main": "party/main.ts",
   "parties": {
     "room": "party/room.ts",
