@@ -1,4 +1,5 @@
 import {CreateRoomDto, zodCreateRoomDto} from '@/app/(home)/types';
+import {ChatMessage} from '@/app/room/[id]/types';
 import type * as Party from 'partykit/server';
 
 export default class Server implements Party.Server {
@@ -13,8 +14,24 @@ export default class Server implements Party.Server {
   async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
     const id = connection.id;
 
-    console.log('id', id);
-    this.party.storage.put(id, connection);
+    const data: ChatMessage = {
+      type: 'system',
+      sender: 'system',
+      message: `${id} connected`,
+    };
+    this.party.broadcast(JSON.stringify(data));
+  }
+
+  onMessage(
+    message: string | ArrayBuffer | ArrayBufferView,
+    sender: Party.Connection
+  ): void | Promise<void> {
+    const data: ChatMessage = {
+      type: 'message',
+      sender: sender.id,
+      message: message.toString(),
+    };
+    this.party.broadcast(JSON.stringify(data));
   }
 
   private createRoom(data: CreateRoomDto) {

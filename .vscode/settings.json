@@ -67,5 +67,6 @@
       "emoji": "🚧 wip: ",
       "description": "作業中の commit (非推奨)"
     }
-  ]
+  ],
+  "cSpell.words": ["daisyui", "tailwindcss"]
 }

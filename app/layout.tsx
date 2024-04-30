@@ -22,15 +22,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex w-screen h-screen justify-start">
-          <main className="mx-auto md:my-auto w-screen md:w-2/3 xl:w-1/2 md:h-auto p-4 md:p-8 pb-48">
-            <div className="relative bg-white w-full h-full md:h-auto p-8 md:rounded-xl md:shadow-xl">
-              {children}
-            </div>
+        <div className="flex h-screen w-screen justify-start">
+          <main className="mx-auto mb-8 w-screen p-4 md:h-auto md:w-2/3 md:p-8 xl:w-1/2">
+            {children}
           </main>
-          <div className="absolute w-full bottom-10 flex flex-col items-center">
-            <Footer />
-          </div>
         </div>
       </body>
     </html>
