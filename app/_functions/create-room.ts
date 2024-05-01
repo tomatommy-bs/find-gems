@@ -2,29 +2,10 @@
 
 import {redirect} from 'next/navigation';
 import {PARTYKIT_URL} from '../env';
-import {CreateRoomDto, zodCreateRoomDto} from '@/party/room/type';
+import _ from 'lodash';
 
 export async function createRoom(formData: FormData) {
-  const data = parseData(formData);
-
-  const res = await fetch(`${PARTYKIT_URL}/parties/room/1`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const {id} = await res.json();
+  const id = _.random(100000, 999999).toString();
 
   redirect(`/room/${id}`);
-}
-
-function parseData(data: FormData): CreateRoomDto {
-  const _data = {
-    command: 'create-room',
-    userName: data.get('user-name'),
-  };
-
-  return zodCreateRoomDto.parse(_data);
 }

@@ -5,6 +5,9 @@ import {gameStateAtom} from '../contexts';
 
 const GamePage = () => {
   const gameState = useAtomValue(gameStateAtom);
+
+  console.log('gameState', gameState);
+
   return (
     <div>
       <p>{gameState?.waitingFor}</p>

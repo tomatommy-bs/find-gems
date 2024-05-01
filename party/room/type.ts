@@ -12,7 +12,6 @@ import z from 'zod';
 
 export const zodRoomApiDto = z.object({
   command: z.enum([
-    'create-room',
     WAITING_FOR_STATE.startGame,
     WAITING_FOR_STATE.NPutStone,
     WAITING_FOR_STATE.SPutStone,
@@ -22,12 +21,6 @@ export const zodRoomApiDto = z.object({
   ]),
 });
 export type RoomApi = z.infer<typeof zodRoomApiDto>;
-
-export const zodCreateRoomDto = zodRoomApiDto.extend({
-  command: z.literal('create-room'),
-  userName: z.string(),
-});
-export type CreateRoomDto = z.infer<typeof zodCreateRoomDto>;
 
 export const zodStartGameDto = zodRoomApiDto.extend({
   command: z.literal(WAITING_FOR_STATE.startGame),

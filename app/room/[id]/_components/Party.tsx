@@ -38,7 +38,7 @@ const Party: React.FC<Props> = props => {
         case ROOM_MESSAGE_TYPE.forceClient:
           switch (data.message) {
             case FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage:
-              router.push(`/room/${id}/game`);
+              router.replace(`/room/${id}/game`);
               break;
           }
       }

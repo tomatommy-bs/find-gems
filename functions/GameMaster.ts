@@ -4,7 +4,7 @@ import {Board} from './Board';
 export class GameMaster {
   private board: Board;
   constructor() {
-    this.board = new Board({isNPlayerFirst: true});
+    this.board = new Board({isNPlayerFirst: this.decideFirstPlayerRandomly()});
   }
 
   public startGame() {

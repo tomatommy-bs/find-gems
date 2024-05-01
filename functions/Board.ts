@@ -81,43 +81,43 @@ export class Board {
     this.updateWaitingForState();
   }
 
-  public updateWaitingForState(): waitingForState {
+  public updateWaitingForState(): void {
     const numberOfCheckedChest =
       this.getCheckedChests('N').length + this.getCheckedChests('S').length;
     const numberOfStonesOnChests = _.sumBy(
       this.chests,
       chest => chest.stones.length
     );
-    let newState: waitingForState;
 
-    if (this.isFinished()) newState = WAITING_FOR_STATE.restartGame;
+    if (this.isFinished()) {
+      this.waitingFor = WAITING_FOR_STATE.restartGame;
+      return;
+    }
 
     switch (numberOfCheckedChest) {
       case 0:
-        newState = this.isNPlayerFirst
+        this.waitingFor = this.isNPlayerFirst
           ? WAITING_FOR_STATE.NCheckChest
           : WAITING_FOR_STATE.SCheckChest;
+        return;
       case 1:
-        newState = this.isNPlayerFirst
+        this.waitingFor = this.isNPlayerFirst
           ? WAITING_FOR_STATE.SCheckChest
           : WAITING_FOR_STATE.NCheckChest;
+        return;
       case 2:
         break;
-      default:
-        throw new Error('Invalid number of checked chests!');
     }
 
     if (numberOfStonesOnChests % 2 === 0) {
-      newState = this.isNPlayerFirst
+      this.waitingFor = this.isNPlayerFirst
         ? WAITING_FOR_STATE.NPutStone
         : WAITING_FOR_STATE.SPutStone;
     } else {
-      newState = this.isNPlayerFirst
+      this.waitingFor = this.isNPlayerFirst
         ? WAITING_FOR_STATE.SPutStone
         : WAITING_FOR_STATE.NPutStone;
     }
-    this.waitingFor = newState;
-    return newState;
   }
 
   public isFinished(): boolean {
