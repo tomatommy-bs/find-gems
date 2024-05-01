@@ -13,36 +13,24 @@ import usePartySocket from 'partysocket/react';
 import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
 import {ChatMessage, RoomMessage, SyncGameMessage} from '@/party/room/type';
 import {startGame} from './functions';
+import {useAtomValue} from 'jotai';
+import {chatAtom, gameStateAtom, partySocketAtom} from './contexts';
+import {useRouter} from 'next/navigation';
 
 export default function RoomPage({params}: {params: {id: string}}) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [gameState, setGameState] = useState<
-    SyncGameMessage['gameState'] | null
-  >(null);
+  const chats = useAtomValue(chatAtom);
+  const ps = useAtomValue(partySocketAtom);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
-  const ws = usePartySocket({
-    host: PARTYKIT_HOST,
-    party: 'room',
-    room: params.id,
-    onMessage: msg => {
-      const data = JSON.parse(msg.data) as RoomMessage;
-      if (data.type === 'chat') {
-        setMessages(msgs => [...msgs, data as ChatMessage]);
-      }
-      if (data.type === 'sync-game') {
-        setGameState((data as SyncGameMessage).gameState);
-      }
-    },
-  });
   const myConnectionId = useMemo(() => {
-    return ws.id;
-  }, [ws.id]);
+    return ps?.id;
+  }, [ps?.id]);
 
   const sendMessage = () => {
     const value = inputRef.current?.value;
     if (!!value) {
-      ws.send(value);
+      ps?.send(value);
       inputRef.current!.value = '';
     }
   };
@@ -54,7 +42,7 @@ export default function RoomPage({params}: {params: {id: string}}) {
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="h-3/4 overflow-y-scroll  text-white">
-        {messages.map((msg, i) => (
+        {chats.map((msg, i) => (
           <Fragment key={i}>
             {msg.messageType === 'presence' && (
               <p className="my-1 rounded-md bg-black bg-opacity-[0.2] text-center">

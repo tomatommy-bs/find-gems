@@ -30,3 +30,9 @@ export const WAITING_FOR_STATE = {
 } as const;
 export type waitingForState =
   (typeof WAITING_FOR_STATE)[keyof typeof WAITING_FOR_STATE];
+
+export const FORCE_CLIENT_ACT_MESSAGE = {
+  jumpToGamePage: 'jumpToGamePage',
+} as const;
+export type ForceClientActMessage =
+  (typeof FORCE_CLIENT_ACT_MESSAGE)[keyof typeof FORCE_CLIENT_ACT_MESSAGE];

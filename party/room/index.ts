@@ -4,6 +4,7 @@ import {
   CreateRoomDto,
   CreateRoomResponse,
   createRoomResponse,
+  ForceClientActMessage,
   SyncGameMessage,
   zodCheckChestDto,
   zodCreateRoomDto,
@@ -11,7 +12,7 @@ import {
   zodRoomApiDto,
 } from './type';
 import {GameMaster} from '@/functions/GameMaster';
-import {WAITING_FOR_STATE} from '@/types/game';
+import {FORCE_CLIENT_ACT_MESSAGE, WAITING_FOR_STATE} from '@/types/game';
 
 export default class Server implements Party.Server {
   private gameMaster: GameMaster = new GameMaster();
@@ -33,6 +34,12 @@ export default class Server implements Party.Server {
       }
       case WAITING_FOR_STATE.startGame: {
         this.gameMaster.startGame();
+        const resDataForceClientAct: ForceClientActMessage = {
+          type: 'force-client',
+          sender: 'system',
+          message: FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage,
+        };
+        this.party.broadcast(JSON.stringify(resDataForceClientAct));
         const resDataForNPlayer: SyncGameMessage = {
           type: 'sync-game',
           sender: 'system',

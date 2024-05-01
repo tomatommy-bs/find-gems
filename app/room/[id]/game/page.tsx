@@ -1,5 +1,15 @@
+'use client';
+
+import {useAtomValue} from 'jotai';
+import {gameStateAtom} from '../contexts';
+
 const GamePage = () => {
-  return <div>Enter</div>;
+  const gameState = useAtomValue(gameStateAtom);
+  return (
+    <div>
+      <p>{gameState?.waitingFor}</p>
+    </div>
+  );
 };
 
 export default GamePage;

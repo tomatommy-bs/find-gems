@@ -1,5 +1,5 @@
 import {
-  ChestInfoKnownByPlayer,
+  FORCE_CLIENT_ACT_MESSAGE,
   WAITING_FOR_STATE,
   zodChestInfoKnownByPlayer,
 } from '@/types/game';
@@ -74,21 +74,31 @@ export type CreateRoomResponse = z.infer<typeof createRoomResponse>;
  * message types
  ***********************/
 
+export const ROOM_MESSAGE_TYPE = {
+  chat: 'chat',
+  syncGame: 'sync-game',
+  forceClient: 'force-client',
+} as const;
+
 export const zodRoomMessage = z.object({
-  type: z.enum(['chat', 'get-ready', 'not-ready', 'sync-game']),
+  type: z.enum([
+    ROOM_MESSAGE_TYPE.chat,
+    ROOM_MESSAGE_TYPE.syncGame,
+    ROOM_MESSAGE_TYPE.forceClient,
+  ]),
   sender: z.string(),
   message: z.string(),
 });
 export type RoomMessage = z.infer<typeof zodRoomMessage>;
 
 export const zodChatMessage = zodRoomMessage.extend({
-  type: z.literal('chat'),
+  type: z.literal(ROOM_MESSAGE_TYPE.chat),
   messageType: z.enum(['presence', 'message']),
 });
 export type ChatMessage = z.infer<typeof zodChatMessage>;
 
-export const syncGameMessage = zodRoomMessage.extend({
-  type: z.literal('sync-game'),
+export const zodSyncGameMessage = zodRoomMessage.extend({
+  type: z.literal(ROOM_MESSAGE_TYPE.syncGame),
   gameState: z.object({
     chestInfo: z.array(zodChestInfoKnownByPlayer),
     waitingFor: z.enum([
@@ -101,4 +111,14 @@ export const syncGameMessage = zodRoomMessage.extend({
     ]),
   }),
 });
-export type SyncGameMessage = z.infer<typeof syncGameMessage>;
+export type SyncGameMessage = z.infer<typeof zodSyncGameMessage>;
+
+/**
+ * client に何かしらのアクションを強制するためのメッセージ
+ */
+export const zodForceClientActMessage = zodRoomMessage.extend({
+  type: z.literal(ROOM_MESSAGE_TYPE.forceClient),
+  sender: z.literal('system'),
+  message: z.enum([FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage]),
+});
+export type ForceClientActMessage = z.infer<typeof zodForceClientActMessage>;
