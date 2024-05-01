@@ -42,11 +42,12 @@ const Party: React.FC<Props> = props => {
               break;
           }
       }
+      console.info(data);
     },
   });
   setPartySocket(ws);
 
-  return null;
+  return <>{ws.id}</>;
 };
 
 export default Party;

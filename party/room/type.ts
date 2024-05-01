@@ -102,6 +102,7 @@ export const zodSyncGameMessage = zodRoomMessage.extend({
       WAITING_FOR_STATE.SCheckChest,
       WAITING_FOR_STATE.restartGame,
     ]),
+    position: z.enum(['N', 'S']),
   }),
 });
 export type SyncGameMessage = z.infer<typeof zodSyncGameMessage>;

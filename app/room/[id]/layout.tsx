@@ -28,7 +28,17 @@ export default function RootLayout({
               <HomeIcon className="w-8" /> home
             </button>
           </Link>
-          <p className="text-xl">Room : {id}</p>
+          <p className="space-x-4">
+            <span className="text-xl">Room : {id}</span>
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() =>
+                navigator.clipboard.writeText(window.location.href)
+              }
+            >
+              copy URL
+            </button>
+          </p>
         </div>
         {children}
       </div>
