@@ -1,8 +1,8 @@
 {
   "name": "find-gems",
-  "main": "party/main.ts",
+  "main": "src/party/main.ts",
   "parties": {
-    "room": "party/room/index.ts"
+    "room": "src/party/room/index.ts"
   },
   "compatibilityDate": "2023-10-10"
 }
