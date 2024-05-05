@@ -55,12 +55,9 @@ export default function RoomPage({params}: {params: {id: string}}) {
               </p>
             )}
             {msg.sender !== myConnectionId && msg.messageType === 'message' && (
-              <div>
-                <span>{msg.sender}</span>
-                <p className="chat chat-start" key={i}>
-                  <span className="chat-bubble">{msg.message}</span>
-                </p>
-              </div>
+              <p className="chat chat-start" key={i}>
+                <span className="chat-bubble">{msg.message}</span>
+              </p>
             )}
           </Fragment>
         ))}

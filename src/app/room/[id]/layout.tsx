@@ -2,12 +2,13 @@
 
 import {PARTYKIT_HOST} from '@/src/app/env';
 import {ChatMessage, RoomMessage, SyncGameMessage} from '@/src/party/room/type';
-import {HomeIcon} from '@heroicons/react/16/solid';
+import {HomeIcon, QuestionMarkCircleIcon} from '@heroicons/react/16/solid';
 import {Provider, useSetAtom} from 'jotai';
 import Link from 'next/link';
 import usePartySocket from 'partysocket/react';
 import {chatAtom, gameStateAtom, partySocketAtom} from './contexts';
 import Party from './_components/Party';
+import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
 
 export default function RootLayout({
   children,
@@ -38,10 +39,22 @@ export default function RootLayout({
             >
               copy URL
             </button>
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => navigator.clipboard.writeText(id)}
+            >
+              copy ID
+            </button>
           </p>
+          <HowToModalTrigger>
+            <button className="btn btn-circle btn-sm">
+              <QuestionMarkCircleIcon />
+            </button>
+          </HowToModalTrigger>
         </div>
         {children}
       </div>
+      <HowToModal />
     </Provider>
   );
 }
