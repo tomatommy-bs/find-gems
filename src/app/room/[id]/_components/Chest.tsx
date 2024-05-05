@@ -1,38 +1,55 @@
 import {Player} from '@/src/functions/Player';
 import {Gem} from '@/src/types/game';
 import {number} from 'zod';
+import Stone from './Stone';
 
 interface Props {
   gems: [Gem, Gem];
   checkedBy?: Player['position'];
   stones?: Player['position'][];
   selected?: boolean;
-  number?: number;
-  disabled?: boolean;
+  number?: number | null;
+  disabledChest?: boolean;
+  disabledStoneTop?: boolean;
+  disabledStoneBottom?: boolean;
   onClick?: () => void;
 }
 
 const Chest: React.FC<Props> = props => {
   return (
-    <div className="indicator flex flex-col items-center">
-      {props.number && (
-        <span className="badge indicator-item badge-primary">
-          {props.number}
-        </span>
-      )}
-      {props.checkedBy && props.number == undefined && (
-        <span className="badge indicator-item badge-secondary">?</span>
-      )}
-      <button
-        className={`btn btn-square ${props.selected ? 'btn-primary' : ''} ${props.disabled ? 'btn-disabled' : ''}`}
-        disabled={props.disabled}
+    <div className="flex flex-col items-center space-y-2">
+      <Stone
+        selected={props.selected}
         onClick={props.onClick}
-      >
-        <span className="space-x-2">
-          <span>{props.gems[0]}</span>
-          <span>{props.gems[1]}</span>
-        </span>
-      </button>
+        disabled={props.disabledStoneTop}
+        putBy={props.stones?.[1]}
+      />
+      <Stone
+        selected={props.selected}
+        onClick={props.onClick}
+        disabled={props.disabledStoneBottom}
+        putBy={props.stones?.[0]}
+      />
+      <div className="indicator">
+        {props.number != undefined && (
+          <span className="badge indicator-item badge-primary">
+            {props.number}
+          </span>
+        )}
+        {props.checkedBy && props.number == undefined && (
+          <span className="badge indicator-item badge-secondary">?</span>
+        )}
+        <button
+          className={`btn btn-square ${props.selected ? 'btn-accent' : ''}`}
+          disabled={props.disabledChest}
+          onClick={props.onClick}
+        >
+          <span className="space-x-2">
+            <span>{props.gems[0]}</span>
+            <span>{props.gems[1]}</span>
+          </span>
+        </button>
+      </div>
     </div>
   );
 };

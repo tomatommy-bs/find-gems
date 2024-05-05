@@ -43,7 +43,7 @@ export class Board {
   public checkNumberOfGemsInAChest(
     chestIndex: number,
     playerPosition: 'N' | 'S'
-  ): number {
+  ) {
     const player = playerPosition === 'N' ? this.playerOnN : this.playerOnS;
     const chest = this.chests[chestIndex];
     const checkedChests = this.getCheckedChests(playerPosition);
@@ -52,8 +52,8 @@ export class Board {
         `Player ${playerPosition} has already checked other one chest!`
       );
 
+    chest.checkNumberOfGems(player);
     this.updateWaitingForState();
-    return chest.checkNumberOfGems(player);
   }
 
   /**
@@ -88,6 +88,12 @@ export class Board {
       this.chests,
       chest => chest.stones.length
     );
+    const numberOfChestOfNPlayer = this.chests.filter(
+      chest => chest.getBelongsTo()?.position === 'N'
+    ).length;
+    const numberOfChestOfSPlayer = this.chests.filter(
+      chest => chest.getBelongsTo()?.position === 'S'
+    ).length;
 
     if (this.isFinished()) {
       this.waitingFor = WAITING_FOR_STATE.restartGame;
@@ -109,15 +115,21 @@ export class Board {
         break;
     }
 
-    if (numberOfStonesOnChests % 2 === 0) {
-      this.waitingFor = this.isNPlayerFirst
-        ? WAITING_FOR_STATE.NPutStone
-        : WAITING_FOR_STATE.SPutStone;
-    } else {
-      this.waitingFor = this.isNPlayerFirst
-        ? WAITING_FOR_STATE.SPutStone
-        : WAITING_FOR_STATE.NPutStone;
+    let isTurnOfNPlayer = this.isNPlayerFirst;
+    if (numberOfStonesOnChests % 2 !== 0) isTurnOfNPlayer = !isTurnOfNPlayer;
+    switch (isTurnOfNPlayer) {
+      case true:
+        if (numberOfChestOfNPlayer === 2) isTurnOfNPlayer = !isTurnOfNPlayer;
+        break;
+      case false:
+        this.waitingFor = WAITING_FOR_STATE.SPutStone;
+        if (numberOfChestOfSPlayer === 2) isTurnOfNPlayer = !isTurnOfNPlayer;
+        break;
     }
+
+    this.waitingFor = isTurnOfNPlayer
+      ? WAITING_FOR_STATE.NPutStone
+      : WAITING_FOR_STATE.SPutStone;
   }
 
   public isFinished(): boolean {
