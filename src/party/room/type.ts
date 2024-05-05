@@ -17,6 +17,7 @@ export const zodRoomApiDto = z.object({
     WAITING_FOR_STATE.SPutStone,
     WAITING_FOR_STATE.NCheckChest,
     WAITING_FOR_STATE.SCheckChest,
+    WAITING_FOR_STATE.nextGame,
     WAITING_FOR_STATE.restartGame,
   ]),
 });
@@ -41,6 +42,11 @@ export const zodPutStoneDto = zodRoomApiDto.extend({
   chestIndex: z.number(),
 });
 export type PutStoneDto = z.infer<typeof zodPutStoneDto>;
+
+export const zodNextGameDto = zodRoomApiDto.extend({
+  command: z.literal(WAITING_FOR_STATE.nextGame),
+});
+export type NextGameDto = z.infer<typeof zodNextGameDto>;
 
 /***********************
  * api response types
@@ -100,9 +106,14 @@ export const zodSyncGameMessage = zodRoomMessage.extend({
       WAITING_FOR_STATE.SPutStone,
       WAITING_FOR_STATE.NCheckChest,
       WAITING_FOR_STATE.SCheckChest,
+      WAITING_FOR_STATE.nextGame,
       WAITING_FOR_STATE.restartGame,
     ]),
     position: z.enum(['N', 'S']),
+    score: z.object({
+      N: z.number(),
+      S: z.number(),
+    }),
   }),
 });
 export type SyncGameMessage = z.infer<typeof zodSyncGameMessage>;

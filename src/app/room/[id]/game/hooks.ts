@@ -2,7 +2,7 @@ import {useAtomValue} from 'jotai';
 import {gameStateAtom} from '../contexts';
 import {useState} from 'react';
 import {ChestInfoKnownByPlayer, WAITING_FOR_STATE} from '@/src/types/game';
-import {checkChest, putStone} from '../functions';
+import {checkChest, nextGame, putStone} from '../functions';
 import {Chest} from '@/src/functions/Chest';
 
 export const useGame = (args: {id: string}) => {
@@ -21,7 +21,7 @@ export const useGame = (args: {id: string}) => {
     else setSelectedChest(index);
   };
 
-  const submitCheckChest = () => {
+  const submit = () => {
     switch (gameState?.waitingFor) {
       case WAITING_FOR_STATE.NCheckChest:
       case WAITING_FOR_STATE.SCheckChest:
@@ -30,6 +30,9 @@ export const useGame = (args: {id: string}) => {
       case WAITING_FOR_STATE.NPutStone:
       case WAITING_FOR_STATE.SPutStone:
         putStone(id, selectedChest!, position!);
+        break;
+      case WAITING_FOR_STATE.nextGame:
+        nextGame(id);
         break;
     }
     setSelectedChest(null);
@@ -42,9 +45,11 @@ export const useGame = (args: {id: string}) => {
     canCheckChest: canDoAction.check,
     canPutTopStone: canDoAction.putTopStone,
     canPutBottomStone: canDoAction.putBottomStone,
-    canSubmit: selectedChest != null,
+    canSubmit:
+      selectedChest != null ||
+      gameState?.waitingFor === WAITING_FOR_STATE.nextGame,
     clickChest,
-    submitCheckChest,
+    submit,
   };
 };
 
@@ -60,6 +65,8 @@ const convertWaitingForToMessage = (waitingFor?: string) => {
       return 'S player, please put a stone';
     case WAITING_FOR_STATE.restartGame:
       return 'Game is over. Please restart the game';
+    case WAITING_FOR_STATE.nextGame:
+      return 'Game is over. Please click ok';
   }
 };
 

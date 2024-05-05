@@ -26,6 +26,7 @@ export const WAITING_FOR_STATE = {
   SCheckChest: 'SCheckChest',
   SPutStone: 'SPutStone',
   startGame: 'startGame',
+  nextGame: 'nextGame',
   restartGame: 'restartGame',
 } as const;
 export type waitingForState =

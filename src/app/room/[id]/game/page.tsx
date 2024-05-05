@@ -39,7 +39,7 @@ const GamePage = ({params}: {params: {id: string}}) => {
         <button
           className="btn btn-accent w-1/2"
           disabled={!game.canSubmit}
-          onClick={game.submitCheckChest}
+          onClick={game.submit}
         >
           ok
         </button>

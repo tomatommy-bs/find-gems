@@ -70,6 +70,12 @@ export default class Server implements Party.Server {
         this.broadcastGameState();
         return Response.json({});
       }
+      case WAITING_FOR_STATE.nextGame: {
+        this.gameMaster?.nextGame();
+        this.saveGameMaster();
+        this.broadcastGameState();
+        return Response.json({});
+      }
       case WAITING_FOR_STATE.restartGame: {
         this.broadcastGameState();
         return Response.json({});
@@ -136,6 +142,7 @@ export default class Server implements Party.Server {
         chestInfo: this.gameMaster.getChestInfoByPlayer('N'),
         waitingFor: this.gameMaster.whatShouldDoNext(),
         position: 'N',
+        score: this.gameMaster.score,
       },
     };
     this.party.broadcast(JSON.stringify(data), [this.SConnection.id]);
@@ -152,6 +159,7 @@ export default class Server implements Party.Server {
         chestInfo: this.gameMaster.getChestInfoByPlayer('S'),
         waitingFor: this.gameMaster.whatShouldDoNext(),
         position: 'S',
+        score: this.gameMaster.score,
       },
     };
     this.party.broadcast(JSON.stringify(data), [this.NConnection.id]);

@@ -74,10 +74,10 @@ export class Chest {
     if (this.checkedBy !== null)
       throw new Error(`Chest already checked by ${this.checkedBy}!`);
     this.checkedBy = player;
-    return this.countNumberOfGems();
+    return this.getNumberOfGems();
   }
 
-  public countNumberOfGems() {
+  public getNumberOfGems() {
     const patternNumber = this.patternNumberMap[this.gemPattern];
     return patternNumber.filter(v => v === 1).length;
   }

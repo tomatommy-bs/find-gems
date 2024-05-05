@@ -1,6 +1,11 @@
 import {PARTYKIT_URL} from '@/src/app/env';
 import {Player} from '@/src/functions/Player';
-import {CheckChestDto, PutStoneDto, StartGameDto} from '@/src/party/room/type';
+import {
+  CheckChestDto,
+  NextGameDto,
+  PutStoneDto,
+  StartGameDto,
+} from '@/src/party/room/type';
 import {WAITING_FOR_STATE} from '@/src/types/game';
 import {redirect} from 'next/navigation';
 
@@ -51,6 +56,20 @@ export const putStone = async (
         ? WAITING_FOR_STATE.NPutStone
         : WAITING_FOR_STATE.SPutStone,
     chestIndex,
+  };
+  try {
+    await fetch(`${PARTYKIT_URL}/parties/room/${roomId}`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const nextGame = async (roomId: string) => {
+  const dto: NextGameDto = {
+    command: WAITING_FOR_STATE.nextGame,
   };
   try {
     await fetch(`${PARTYKIT_URL}/parties/room/${roomId}`, {

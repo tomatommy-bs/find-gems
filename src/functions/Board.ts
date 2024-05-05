@@ -67,7 +67,7 @@ export class Board {
       gems: chest.showGems(player),
       stones: chest.stones,
       checkedBy: chest.checkedBy,
-      number: chest.checkedBy === player ? chest.countNumberOfGems() : null,
+      number: chest.checkedBy === player ? chest.getNumberOfGems() : null,
     }));
   }
 
@@ -96,7 +96,7 @@ export class Board {
     ).length;
 
     if (this.isFinished()) {
-      this.waitingFor = WAITING_FOR_STATE.restartGame;
+      this.waitingFor = WAITING_FOR_STATE.nextGame;
       return;
     }
 
@@ -133,13 +133,18 @@ export class Board {
   }
 
   public isFinished(): boolean {
-    const numberOfChestOfNPlayer = this.chests.filter(
+    const {N, S} = this.getPlayersChest();
+    return N.length + S.length === 4;
+  }
+
+  public getPlayersChest() {
+    const N = this.chests.filter(
       chest => chest.getBelongsTo()?.position === 'N'
-    ).length;
-    const numberOfChestOfSPlayer = this.chests.filter(
+    );
+    const S = this.chests.filter(
       chest => chest.getBelongsTo()?.position === 'S'
-    ).length;
-    return numberOfChestOfNPlayer + numberOfChestOfSPlayer === 4;
+    );
+    return {N, S};
   }
 
   private getCheckedChests(playerPosition: 'N' | 'S'): Chest[] {
