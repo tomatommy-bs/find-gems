@@ -20,28 +20,18 @@ import {useRouter} from 'next/navigation';
 export default function RoomPage({params}: {params: {id: string}}) {
   const chats = useAtomValue(chatAtom);
   const ps = useAtomValue(partySocketAtom);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   const myConnectionId = useMemo(() => {
     return ps?.id;
   }, [ps?.id]);
-
-  const sendMessage = () => {
-    const value = inputRef.current?.value;
-    if (!!value) {
-      ps?.send(value);
-      inputRef.current!.value = '';
-    }
-  };
 
   const handleStartGame = () => {
     startGame(params.id);
   };
 
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div className="h-3/4 overflow-y-scroll  text-white">
+    <div className="flex h-full flex-col justify-between space-y-4">
+      <div className="grow overflow-y-scroll text-white">
         {chats.map((msg, i) => (
           <Fragment key={i}>
             {msg.messageType === 'presence' && (
@@ -66,12 +56,6 @@ export default function RoomPage({params}: {params: {id: string}}) {
       <button className="btn btn-block" onClick={handleStartGame}>
         start game
       </button>
-      <div className="flex">
-        <Input ref={inputRef} placeholder="message" className="grow" />
-        <button className="btn btn-primary" onClick={sendMessage}>
-          <PaperAirplaneIcon className="w-12" />
-        </button>
-      </div>
     </div>
   );
 }

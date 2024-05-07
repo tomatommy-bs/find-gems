@@ -47,7 +47,7 @@ const Party: React.FC<Props> = props => {
   });
   setPartySocket(ws);
 
-  return <>{ws.id}</>;
+  return null;
 };
 
 export default Party;

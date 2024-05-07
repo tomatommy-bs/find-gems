@@ -22,7 +22,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en">
       <body className={inter.className}>
         <div className="flex h-screen w-screen justify-start">
-          <main className="mx-auto mb-12 w-screen p-4 md:h-auto md:w-2/3 md:p-8 xl:w-1/2">
+          <main className="mx-auto w-screen p-4 md:w-2/3 md:p-8 xl:w-1/2">
             {children}
           </main>
         </div>

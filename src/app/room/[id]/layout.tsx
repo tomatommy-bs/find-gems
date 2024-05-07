@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <Provider>
       <Party id={id} />
-      <div className="size-full">
+      <div className="flex h-full flex-col space-y-4">
         <div className="flex items-center space-x-4">
           <Link href={'/'}>
             <button className="btn btn-outline">
@@ -52,7 +52,7 @@ export default function RootLayout({
             </button>
           </HowToModalTrigger>
         </div>
-        {children}
+        <div className="grow overflow-scroll">{children}</div>
       </div>
       <HowToModal />
     </Provider>
