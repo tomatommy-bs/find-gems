@@ -1,7 +1,7 @@
 'use client';
 
 import {useAtomValue} from 'jotai';
-import {gameStateAtom} from '../contexts';
+import {gameStateAtom, presenceAtom} from '../contexts';
 import {use, useState} from 'react';
 import Chest from '../_components/Chest';
 import {set} from 'lodash';
@@ -23,7 +23,10 @@ const GamePage = ({params}: {params: {id: string}}) => {
         {game.gameState?.chestInfo.map((chest, index) => (
           <Chest
             key={index}
-            gems={chest.gems}
+            topGems={game.gameState?.position === 'N' ? chest.gems : undefined}
+            bottomGems={
+              game.gameState?.position === 'S' ? chest.gems : undefined
+            }
             selected={game.selectedChest === index}
             onClick={() => game.clickChest(index)}
             checkedBy={chest.checkedBy?.position}
