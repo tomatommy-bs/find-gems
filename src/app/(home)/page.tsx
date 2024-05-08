@@ -13,10 +13,13 @@ import {useEffect} from 'react';
 import {set} from 'lodash';
 import {PencilIcon, PencilSquareIcon} from '@heroicons/react/16/solid';
 import Cookies from 'js-cookie';
+import {useForceUpdate} from '@/src/hooks/use-force-update';
 
 const modalName = 'name-modal';
 
 export default function Home() {
+  const forceUpdate = useForceUpdate();
+
   const name = Cookies.get('name') ?? '';
 
   const openModal = () => {
@@ -44,6 +47,7 @@ export default function Home() {
       'input'
     ) as HTMLInputElement;
     setName(input.value);
+    forceUpdate();
     closeModal();
   };
 

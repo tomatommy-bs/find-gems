@@ -149,6 +149,7 @@ export const zodSyncPresenceMessage = zodRoomMessage.extend({
     z.object({
       id: z.string(),
       name: z.string().optional(),
+      position: z.enum(['N', 'S']).optional(),
     })
   ),
 });

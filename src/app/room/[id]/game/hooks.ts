@@ -1,5 +1,5 @@
 import {useAtomValue} from 'jotai';
-import {gameStateAtom} from '../contexts';
+import {gameStateAtom, presenceAtom} from '../contexts';
 import {useState} from 'react';
 import {ChestInfoKnownByPlayer, WAITING_FOR_STATE} from '@/src/types/game';
 import {checkChest, nextGame, putStone} from '../functions';
@@ -8,6 +8,7 @@ import {Chest} from '@/src/functions/Chest';
 export const useGame = (args: {id: string}) => {
   const {id} = args;
   const gameState = useAtomValue(gameStateAtom);
+  const presence = useAtomValue(presenceAtom);
   const [selectedChest, setSelectedChest] = useState<number | null>(null);
   const position = gameState?.position;
   const canDoAction = judgeCanDoAction({
@@ -40,7 +41,11 @@ export const useGame = (args: {id: string}) => {
 
   return {
     gameState,
-    commandMessage: convertWaitingForToMessage(gameState?.waitingFor),
+    commandMessage: convertWaitingForToMessage({
+      waitingFor: gameState?.waitingFor,
+      nPlayerName: presence.find(p => p.position === 'N')?.name,
+      sPlayerName: presence.find(p => p.position === 'S')?.name,
+    }),
     selectedChest,
     canCheckChest: canDoAction.check,
     canPutTopStone: canDoAction.putTopStone,
@@ -53,16 +58,21 @@ export const useGame = (args: {id: string}) => {
   };
 };
 
-const convertWaitingForToMessage = (waitingFor?: string) => {
+const convertWaitingForToMessage = (args: {
+  waitingFor?: string;
+  nPlayerName?: string;
+  sPlayerName?: string;
+}) => {
+  const {waitingFor, nPlayerName, sPlayerName} = args;
   switch (waitingFor) {
     case WAITING_FOR_STATE.NCheckChest:
-      return 'N player, please check a chest';
+      return `${nPlayerName}, please check a chest`;
     case WAITING_FOR_STATE.SCheckChest:
-      return 'S player, please check a chest';
+      return `${sPlayerName}, please check a chest`;
     case WAITING_FOR_STATE.NPutStone:
-      return 'N player, please put a stone';
+      return `${nPlayerName}, please put a stone`;
     case WAITING_FOR_STATE.SPutStone:
-      return 'S player, please put a stone';
+      return `${sPlayerName} player, please put a stone`;
     case WAITING_FOR_STATE.restartGame:
       return 'Game is over. Please restart the game';
     case WAITING_FOR_STATE.nextGame:

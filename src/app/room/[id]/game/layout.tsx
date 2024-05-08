@@ -29,7 +29,6 @@ export default function Layout({children}: {children: React.ReactNode}) {
 
   return (
     <section>
-      <p>you are located at {gameState?.position}</p>
       {loading ? <div className="loading loading-bars loading-lg" /> : children}
     </section>
   );

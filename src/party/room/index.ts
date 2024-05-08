@@ -93,8 +93,13 @@ export default class Server implements Party.Server {
   }
 
   async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
-    if (this.NConnection === null) this.NConnection = connection;
-    else if (this.SConnection === null) this.SConnection = connection;
+    if (this.NConnection === null) {
+      this.NConnection = connection;
+      this.setConnectionState(connection, {position: 'N'});
+    } else if (this.SConnection === null) {
+      this.SConnection = connection;
+      this.setConnectionState(connection, {position: 'S'});
+    }
 
     this.broadcastGameState();
   }
@@ -130,24 +135,30 @@ export default class Server implements Party.Server {
       }
       case ROOM_MESSAGE_TYPE.join: {
         const joinMessage = zodJoinRoomMessageDto.parse(json);
-        sender.setState({name: joinMessage.name});
+        this.setConnectionState(sender, {name: joinMessage.name});
         const data: ChatMessage = {
           type: 'chat',
           messageType: 'presence',
           sender: 'system',
           message: `${joinMessage.name} joined`,
         };
-        this.party.broadcast(JSON.stringify(data), [sender.id]);
+        this.party.broadcast(JSON.stringify(data));
         this.broadcastPresence();
         break;
       }
     }
   }
 
+  private setConnectionState(connection: Party.Connection, state: object) {
+    connection.setState({...connection.state, ...state});
+  }
+
   private async broadcastPresence() {
-    const users = Array.from(this.party.getConnections<{name?: string}>()).map(
-      c => ({id: c.id, name: c.state?.name})
-    );
+    const users = Array.from(
+      this.party.getConnections<{name?: string; position?: 'N' | 'S'}>()
+    ).map(c => {
+      return {id: c.id, name: c.state?.name, position: c.state?.position};
+    });
     const data: SyncPresenceMessage = {
       type: ROOM_MESSAGE_TYPE.syncPresence,
       sender: 'system',
