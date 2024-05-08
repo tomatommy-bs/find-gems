@@ -5,10 +5,17 @@ import {
   createRoomResponse,
   ForceClientActMessage,
   ROOM_MESSAGE_TYPE,
+  RoomMessage,
+  RoomMessageDto,
   SyncGameMessage,
+  SyncPresenceMessage,
+  zodChatMessage,
+  zodChatMessageDto,
   zodCheckChestDto,
+  zodJoinRoomMessageDto,
   zodPutStoneDto,
   zodRoomApiDto,
+  zodRoomMessageDto,
 } from './type';
 import {GameMaster} from '@/src/functions/GameMaster';
 import {FORCE_CLIENT_ACT_MESSAGE, WAITING_FOR_STATE} from '@/src/types/game';
@@ -86,42 +93,66 @@ export default class Server implements Party.Server {
   }
 
   async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
-    const id = connection.id;
-
     if (this.NConnection === null) this.NConnection = connection;
     else if (this.SConnection === null) this.SConnection = connection;
 
     this.broadcastGameState();
-    const data: ChatMessage = {
-      type: ROOM_MESSAGE_TYPE.chat,
-      messageType: 'presence',
-      sender: 'system',
-      message: `${id} connected`,
-    };
-    this.party.broadcast(JSON.stringify(data));
   }
 
-  onClose(connection: Party.Connection): void | Promise<void> {
-    const id = connection.id;
+  onClose(connection: Party.Connection<{name?: string}>): void | Promise<void> {
+    const name = connection.state?.name;
 
     const data: ChatMessage = {
       type: 'chat',
       messageType: 'presence',
       sender: 'system',
-      message: `${id} disconnected`,
+      message: `${name} disconnected`,
     };
     this.party.broadcast(JSON.stringify(data));
+    this.broadcastPresence();
   }
 
-  onMessage(
-    message: string | ArrayBuffer | ArrayBufferView,
-    sender: Party.Connection
-  ): void | Promise<void> {
-    const data: ChatMessage = {
-      type: 'chat',
-      messageType: 'message',
-      sender: sender.id,
-      message: message.toString(),
+  onMessage(message: string, sender: Party.Connection): void | Promise<void> {
+    const json = JSON.parse(message);
+    const roomMessageDto = zodRoomMessageDto.parse(json);
+
+    switch (roomMessageDto.type) {
+      case ROOM_MESSAGE_TYPE.chat: {
+        const chatMessage = zodChatMessageDto.parse(json);
+        const data: ChatMessage = {
+          type: 'chat',
+          messageType: 'message',
+          sender: sender.id,
+          message: chatMessage.message,
+        };
+        this.party.broadcast(JSON.stringify(data));
+        break;
+      }
+      case ROOM_MESSAGE_TYPE.join: {
+        const joinMessage = zodJoinRoomMessageDto.parse(json);
+        sender.setState({name: joinMessage.name});
+        const data: ChatMessage = {
+          type: 'chat',
+          messageType: 'presence',
+          sender: 'system',
+          message: `${joinMessage.name} joined`,
+        };
+        this.party.broadcast(JSON.stringify(data), [sender.id]);
+        this.broadcastPresence();
+        break;
+      }
+    }
+  }
+
+  private async broadcastPresence() {
+    const users = Array.from(this.party.getConnections<{name?: string}>()).map(
+      c => ({id: c.id, name: c.state?.name})
+    );
+    const data: SyncPresenceMessage = {
+      type: ROOM_MESSAGE_TYPE.syncPresence,
+      sender: 'system',
+      message: 'presence updated',
+      users: users,
     };
     this.party.broadcast(JSON.stringify(data));
   }

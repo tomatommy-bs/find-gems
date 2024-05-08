@@ -70,20 +70,45 @@ export const createRoomResponse = zodRoomApiResponse.extend({
 export type CreateRoomResponse = z.infer<typeof createRoomResponse>;
 
 /***********************
- * message types
+ * message types dto (to server)
  ***********************/
 
 export const ROOM_MESSAGE_TYPE = {
   chat: 'chat',
   syncGame: 'sync-game',
+  syncPresence: 'sync-presence',
   forceClient: 'force-client',
+  join: 'join',
 } as const;
+
+export const zodRoomMessageDto = z.object({
+  type: z.enum([ROOM_MESSAGE_TYPE.chat, ROOM_MESSAGE_TYPE.join]),
+});
+export type RoomMessageDto = z.infer<typeof zodRoomMessageDto>;
+
+export const zodChatMessageDto = zodRoomMessageDto.extend({
+  type: z.literal(ROOM_MESSAGE_TYPE.chat),
+  messageType: z.enum(['presence', 'message']),
+  message: z.string(),
+});
+export type ChatMessageDto = z.infer<typeof zodChatMessageDto>;
+
+export const zodJoinRoomMessageDto = zodRoomMessageDto.extend({
+  type: z.literal(ROOM_MESSAGE_TYPE.join),
+  name: z.string(),
+});
+export type JoinRoomMessageDto = z.infer<typeof zodJoinRoomMessageDto>;
+
+/***********************
+ * message types (from server)
+ ***********************/
 
 export const zodRoomMessage = z.object({
   type: z.enum([
     ROOM_MESSAGE_TYPE.chat,
     ROOM_MESSAGE_TYPE.syncGame,
     ROOM_MESSAGE_TYPE.forceClient,
+    ROOM_MESSAGE_TYPE.syncPresence,
   ]),
   sender: z.string(),
   message: z.string(),
@@ -117,6 +142,17 @@ export const zodSyncGameMessage = zodRoomMessage.extend({
   }),
 });
 export type SyncGameMessage = z.infer<typeof zodSyncGameMessage>;
+
+export const zodSyncPresenceMessage = zodRoomMessage.extend({
+  type: z.literal(ROOM_MESSAGE_TYPE.syncPresence),
+  users: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string().optional(),
+    })
+  ),
+});
+export type SyncPresenceMessage = z.infer<typeof zodSyncPresenceMessage>;
 
 /**
  * client に何かしらのアクションを強制するためのメッセージ

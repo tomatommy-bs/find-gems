@@ -3,12 +3,18 @@
 import {PARTYKIT_HOST} from '@/src/app/env';
 import {ChatMessage, RoomMessage, SyncGameMessage} from '@/src/party/room/type';
 import {HomeIcon, QuestionMarkCircleIcon} from '@heroicons/react/16/solid';
-import {Provider, useSetAtom} from 'jotai';
+import {Provider, useAtomValue, useSetAtom} from 'jotai';
 import Link from 'next/link';
 import usePartySocket from 'partysocket/react';
-import {chatAtom, gameStateAtom, partySocketAtom} from './contexts';
+import {
+  chatAtom,
+  gameStateAtom,
+  partySocketAtom,
+  presenceAtom,
+} from './contexts';
 import Party from './_components/Party';
 import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
+import Presence from './_components/Presence';
 
 export default function RootLayout({
   children,
@@ -52,6 +58,7 @@ export default function RootLayout({
             </button>
           </HowToModalTrigger>
         </div>
+        <Presence />
         <div className="grow overflow-scroll">{children}</div>
       </div>
       <HowToModal />

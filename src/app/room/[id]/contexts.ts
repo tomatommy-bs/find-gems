@@ -5,3 +5,4 @@ import PartySocket from 'partysocket';
 export const chatAtom = atom<ChatMessage[]>([]);
 export const gameStateAtom = atom<SyncGameMessage['gameState'] | null>(null);
 export const partySocketAtom = atom<PartySocket | null>(null);
+export const presenceAtom = atom<{id: string; name?: string}[]>([]);

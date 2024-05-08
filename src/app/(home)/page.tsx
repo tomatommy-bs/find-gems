@@ -12,11 +12,12 @@ import {useLocalStorage} from '@/src/hooks/use-local-storage/use-local-storage';
 import {useEffect} from 'react';
 import {set} from 'lodash';
 import {PencilIcon, PencilSquareIcon} from '@heroicons/react/16/solid';
+import Cookies from 'js-cookie';
 
 const modalName = 'name-modal';
 
 export default function Home() {
-  const [name, setName] = useLocalStorage({key: 'name', defaultValue: ''});
+  const name = Cookies.get('name') ?? '';
 
   const openModal = () => {
     const dialog = document.getElementById(modalName) as HTMLDialogElement;
@@ -28,10 +29,14 @@ export default function Home() {
     dialog.close();
   };
 
+  const setName = (name: string) => {
+    Cookies.set('name', name, {expires: 365});
+  };
+
   useEffect(() => {
     if (name !== '') closeModal();
     else openModal();
-  }, [name, setName]);
+  }, [name]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
