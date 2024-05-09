@@ -1,19 +1,11 @@
 'use client';
 
-import Button from '@/src/components/Button';
 import RoomMaker from '@/src/app/_components/RoomMaker';
-import {redirect} from 'next/navigation';
-import {PARTYKIT_HOST, PARTYKIT_URL} from '../env';
-import Input from '@/src/components/Input';
-import {createRoom} from '../_functions/create-room';
-import usePartySocket from 'partysocket/react';
 import Card from '@/src/components/Card';
-import {useLocalStorage} from '@/src/hooks/use-local-storage/use-local-storage';
 import {useEffect} from 'react';
-import {set} from 'lodash';
 import {PencilIcon, PencilSquareIcon} from '@heroicons/react/16/solid';
 import Cookies from 'js-cookie';
-import {useForceUpdate} from '@/src/hooks/use-force-update';
+import {useForceUpdate} from '@mantine/hooks';
 
 const modalName = 'name-modal';
 
