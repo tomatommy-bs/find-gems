@@ -3,6 +3,7 @@ import Chest from './Chest';
 import {
   ArrowRightCircleIcon,
   ArrowRightIcon,
+  PlusIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid';
 import {Player} from '@/src/functions/Player';
@@ -18,47 +19,29 @@ const HowToModal: React.FC = () => {
       <div className="modal-scroll modal-box min-h-[50vh]">
         <h2 className="text-xl font-bold">How to play</h2>
         <div role="tablist" className="tabs tabs-lifted">
-          <input
-            name="tab"
-            type="radio"
-            role="tab"
-            className="tab"
-            aria-label="page1"
-            defaultChecked
-          />
-          <div
-            role="tabpanel"
-            className="tab-content rounded-box border-base-300 bg-base-100 p-6"
-          >
-            <Page1 />
-          </div>
-
-          <input
-            name="tab"
-            type="radio"
-            role="tab"
-            className="tab"
-            aria-label="page2"
-          />
-          <div
-            role="tabpanel"
-            className="tab-content rounded-box border-base-300 bg-base-100 p-6"
-          >
-            <Page2 />
-          </div>
-          <input
-            name="tab"
-            type="radio"
-            role="tab"
-            className="tab"
-            aria-label="page3"
-          />
-          <div
-            role="tabpanel"
-            className="tab-content rounded-box border-base-300 bg-base-100 p-6"
-          >
-            <Page3 />
-          </div>
+          {[
+            <Page1 key={1} />,
+            <Page2 key={2} />,
+            <Page3 key={3} />,
+            <Page4 key={4} />,
+          ].map((page, i) => (
+            <>
+              <input
+                name="tab"
+                type="radio"
+                role="tab"
+                className="tab"
+                aria-label={`page${i + 1}`}
+                defaultChecked={i == 0}
+              />
+              <div
+                role="tabpanel"
+                className="tab-content rounded-box border-base-300 bg-base-100 p-6"
+              >
+                {page}
+              </div>
+            </>
+          ))}
         </div>
       </div>
       <form method="dialog" className="modal-backdrop">
@@ -172,7 +155,7 @@ const Page2: React.FC = () => {
   );
 };
 
-export const Page3: React.FC = () => {
+const Page3: React.FC = () => {
   return (
     <section className="space-y-2">
       <p>Next, you guys should put stones on the chest.</p>
@@ -197,6 +180,58 @@ export const Page3: React.FC = () => {
           <Chest topGems={[1, 0]} stones={['N', 'S']} />
           <ArrowRightIcon className="mx-auto h-8" />
           <PlayerBadge name="Bob" position="S" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Page4: React.FC = () => {
+  return (
+    <section className="space-y-2">
+      <p>Finally, the player get the larger mount of gems will win 🎉</p>
+      <div className="flex items-center justify-center space-x-2">
+        <div className="space-y-4">
+          <PlayerBadge name="John" position="N" />
+          <div className="flex items-center space-x-2">
+            <Chest topGems={[1, 0]} bottomGems={[0, 1]} showStones={false} />
+            <PlusIcon className="h-8" />
+            <Chest topGems={[1, 0]} bottomGems={[1, 1]} showStones={false} />
+          </div>
+        </div>
+        <span className="mt-8 text-4xl">{'<'}</span>
+        <div className="relative rounded-md bg-green-200 p-2">
+          <span className="absolute right-0 top-0 m-1">🎉</span>
+          <PlayerBadge name="Bob" position="S" />
+          <div className="mt-4 flex items-center space-x-2">
+            <Chest topGems={[1, 1]} bottomGems={[1, 1]} showStones={false} />
+            <PlusIcon className="h-8" />
+            <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
+          </div>
+        </div>
+      </div>
+      <p>
+        But notice, the player get the <strong>both of two gems chests</strong>{' '}
+        will win finally
+      </p>
+      <div className="flex items-center justify-center space-x-2">
+        <div className="relative rounded-md bg-green-200 p-2">
+          <span className="absolute right-0 top-0 m-1">🎉</span>
+          <PlayerBadge name="John" position="N" />
+          <div className="mt-4 flex items-center space-x-2">
+            <Chest topGems={[1, 0]} bottomGems={[0, 1]} showStones={false} />
+            <PlusIcon className="h-8" />
+            <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
+          </div>
+        </div>
+        <span className="mt-8 text-4xl">{'<'}</span>
+        <div className=" rounded-md">
+          <PlayerBadge name="Bob" position="S" />
+          <div className="mt-4 flex items-center space-x-2">
+            <Chest topGems={[1, 1]} bottomGems={[1, 1]} showStones={false} />
+            <PlusIcon className="h-8" />
+            <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
+          </div>
         </div>
       </div>
     </section>
