@@ -5,7 +5,7 @@ import {
   ArrowsPointingOutIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/16/solid';
-import {useFullscreen} from '@mantine/hooks';
+import {useColorScheme, useFullscreen, useOrientation} from '@mantine/hooks';
 import {use} from 'react';
 import HowToModal, {
   HowToModalTrigger,
