@@ -135,15 +135,6 @@ export default class Server implements Party.Server {
   private setConnectionState(connection: Party.Connection, state: object) {
     connection.setState({...connection.state, ...state});
   }
-
-  async onStart() {
-    const gm = await this.party.storage.get<GameMaster>('gameMaster');
-    if (gm) this.gameMaster = gm;
-    else {
-      this.gameMaster = new GameMaster();
-      this.saveGameMaster();
-    }
-  }
 }
 
 Server satisfies Party.Worker;

@@ -50,7 +50,7 @@ export default function RootLayout({
               </button>
             </p>
           </span>
-          <span>
+          <span className="mr-12">
             <Presence />
           </span>
         </div>
