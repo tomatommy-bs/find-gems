@@ -14,12 +14,18 @@ import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
 import {ChatMessage, RoomMessage, SyncGameMessage} from '@/src/party/room/type';
 import {startGame} from './functions';
 import {useAtomValue} from 'jotai';
-import {chatAtom, gameStateAtom, partySocketAtom} from './contexts';
+import {
+  chatAtom,
+  gameStateAtom,
+  partySocketAtom,
+  presenceAtom,
+} from './contexts';
 import {useRouter} from 'next/navigation';
 
 export default function RoomPage({params}: {params: {id: string}}) {
   const chats = useAtomValue(chatAtom);
   const ps = useAtomValue(partySocketAtom);
+  const presence = useAtomValue(presenceAtom);
 
   const myConnectionId = useMemo(() => {
     return ps?.id;
@@ -53,7 +59,11 @@ export default function RoomPage({params}: {params: {id: string}}) {
         ))}
       </div>
 
-      <button className="btn btn-block" onClick={handleStartGame}>
+      <button
+        className="btn btn-block"
+        onClick={handleStartGame}
+        disabled={presence.length < 2}
+      >
         start game
       </button>
     </div>
