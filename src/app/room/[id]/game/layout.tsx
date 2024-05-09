@@ -3,6 +3,7 @@
 import {useAtomValue} from 'jotai';
 import {gameStateAtom} from '../contexts';
 import {useEffect, useState} from 'react';
+import {useCounter, useFullscreen} from '@mantine/hooks';
 
 const MAX_RETRY = 3;
 

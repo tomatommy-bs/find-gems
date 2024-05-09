@@ -1,17 +1,7 @@
 'use client';
-
-import {PARTYKIT_HOST} from '@/src/app/env';
-import {ChatMessage, RoomMessage, SyncGameMessage} from '@/src/party/room/type';
 import {HomeIcon, QuestionMarkCircleIcon} from '@heroicons/react/16/solid';
-import {Provider, useAtomValue, useSetAtom} from 'jotai';
+import {Provider} from 'jotai';
 import Link from 'next/link';
-import usePartySocket from 'partysocket/react';
-import {
-  chatAtom,
-  gameStateAtom,
-  partySocketAtom,
-  presenceAtom,
-} from './contexts';
 import Party from './_components/Party';
 import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
 import Presence from './_components/Presence';

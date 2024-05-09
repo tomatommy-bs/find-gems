@@ -164,3 +164,12 @@ export const zodForceClientActMessage = zodRoomMessage.extend({
   message: z.enum([FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage]),
 });
 export type ForceClientActMessage = z.infer<typeof zodForceClientActMessage>;
+
+/**
+ *
+ */
+
+export type connectionState = {
+  name?: string;
+  position?: 'N' | 'S';
+};

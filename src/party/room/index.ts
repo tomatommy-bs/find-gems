@@ -1,6 +1,7 @@
 import type * as Party from 'partykit/server';
 import {
   ChatMessage,
+  connectionState as ConnectionState,
   CreateRoomResponse,
   createRoomResponse,
   ForceClientActMessage,
@@ -19,6 +20,7 @@ import {
 } from './type';
 import {GameMaster} from '@/src/functions/GameMaster';
 import {FORCE_CLIENT_ACT_MESSAGE, WAITING_FOR_STATE} from '@/src/types/game';
+import {BroadcastManager} from './broadcastManager';
 
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Party) {}
@@ -92,7 +94,10 @@ export default class Server implements Party.Server {
     }
   }
 
-  async onConnect(connection: Party.Connection, ctx: Party.ConnectionContext) {
+  async onConnect(
+    connection: Party.Connection<ConnectionState>,
+    ctx: Party.ConnectionContext
+  ) {
     if (this.NConnection === null) {
       this.NConnection = connection;
       this.setConnectionState(connection, {position: 'N'});
@@ -105,16 +110,8 @@ export default class Server implements Party.Server {
   }
 
   onClose(connection: Party.Connection<{name?: string}>): void | Promise<void> {
-    const name = connection.state?.name;
-
-    const data: ChatMessage = {
-      type: 'chat',
-      messageType: 'presence',
-      sender: 'system',
-      message: `${name} disconnected`,
-    };
-    this.party.broadcast(JSON.stringify(data));
-    this.broadcastPresence();
+    BroadcastManager.broadcastLeaveMessage(this.party, connection);
+    BroadcastManager.broadcastPresence(this.party);
   }
 
   onMessage(message: string, sender: Party.Connection): void | Promise<void> {
@@ -143,7 +140,7 @@ export default class Server implements Party.Server {
           message: `${joinMessage.name} joined`,
         };
         this.party.broadcast(JSON.stringify(data));
-        this.broadcastPresence();
+        BroadcastManager.broadcastPresence(this.party);
         break;
       }
     }
@@ -151,21 +148,6 @@ export default class Server implements Party.Server {
 
   private setConnectionState(connection: Party.Connection, state: object) {
     connection.setState({...connection.state, ...state});
-  }
-
-  private async broadcastPresence() {
-    const users = Array.from(
-      this.party.getConnections<{name?: string; position?: 'N' | 'S'}>()
-    ).map(c => {
-      return {id: c.id, name: c.state?.name, position: c.state?.position};
-    });
-    const data: SyncPresenceMessage = {
-      type: ROOM_MESSAGE_TYPE.syncPresence,
-      sender: 'system',
-      message: 'presence updated',
-      users: users,
-    };
-    this.party.broadcast(JSON.stringify(data));
   }
 
   private async broadcastGameState() {
