@@ -20,9 +20,7 @@ const ToolBox: React.FC = () => {
         {fullscreen ? <ArrowsPointingInIcon /> : <ArrowsPointingOutIcon />}
       </button>
       <HowToModalTrigger>
-        <button className="btn btn-circle btn-neutral btn-sm">
-          <QuestionMarkCircleIcon />
-        </button>
+        <QuestionMarkCircleIcon />
       </HowToModalTrigger>
       <HowToModal />
     </div>

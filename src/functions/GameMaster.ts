@@ -2,18 +2,21 @@ import {WAITING_FOR_STATE, waitingForState} from '@/src/types/game';
 import {Board} from './Board';
 import _ from 'lodash';
 
+const INITIAL_SCORE = {
+  N: 0,
+  S: 0,
+};
+
 export class GameMaster {
   private board: Board;
-  public score = {
-    N: 0,
-    S: 0,
-  };
+  public score = _.cloneDeep(INITIAL_SCORE);
   constructor() {
     this.board = new Board({isNPlayerFirst: this.decideFirstPlayerRandomly()});
   }
 
   public startGame() {
     const isNPlayerFirst = this.decideFirstPlayerRandomly();
+    this.score = _.cloneDeep(INITIAL_SCORE);
     this.board = new Board({isNPlayerFirst});
   }
 

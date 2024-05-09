@@ -25,7 +25,7 @@ import {BroadcastManager} from './broadcastManager';
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Party) {}
 
-  gameMaster: GameMaster | null = null;
+  gameMaster: GameMaster = new GameMaster();
   NConnection: Party.Connection | null = null;
   SConnection: Party.Connection | null = null;
 
@@ -39,59 +39,46 @@ export default class Server implements Party.Server {
 
     switch (command) {
       case WAITING_FOR_STATE.startGame: {
-        const gm = new GameMaster();
-        this.gameMaster = gm;
-        this.saveGameMaster();
-        const resDataForceClientAct: ForceClientActMessage = {
-          type: ROOM_MESSAGE_TYPE.forceClient,
-          sender: 'system',
-          message: FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage,
-        };
-        this.party.broadcast(JSON.stringify(resDataForceClientAct));
-        this.broadcastGameState();
-        return Response.json({});
+        this.gameMaster.startGame();
+        BroadcastManager.broadcastForceClientAct(
+          this.party,
+          FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage
+        );
+        break;
       }
       case WAITING_FOR_STATE.NCheckChest: {
         const data = zodCheckChestDto.parse(json);
         this.gameMaster?.checkChest('N', data.chestIndex);
-        this.saveGameMaster();
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       case WAITING_FOR_STATE.SCheckChest: {
         const data = zodCheckChestDto.parse(json);
         this.gameMaster?.checkChest('S', data.chestIndex);
-        this.saveGameMaster();
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       case WAITING_FOR_STATE.NPutStone: {
         const data = zodPutStoneDto.parse(json);
         this.gameMaster?.putStone('N', data.chestIndex);
-        this.saveGameMaster();
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       case WAITING_FOR_STATE.SPutStone: {
         const data = zodPutStoneDto.parse(json);
         this.gameMaster?.putStone('S', data.chestIndex);
-        this.saveGameMaster();
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       case WAITING_FOR_STATE.nextGame: {
         this.gameMaster?.nextGame();
-        this.saveGameMaster();
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       case WAITING_FOR_STATE.restartGame: {
-        this.broadcastGameState();
-        return Response.json({});
+        break;
       }
       default:
         throw new Error(command satisfies never);
     }
+    this.saveGameMaster();
+    BroadcastManager.broadcastGameState(this.party, this.gameMaster);
+    return Response.json({});
   }
 
   async onConnect(
@@ -106,10 +93,15 @@ export default class Server implements Party.Server {
       this.setConnectionState(connection, {position: 'S'});
     }
 
-    this.broadcastGameState();
+    BroadcastManager.broadcastGameState(this.party, this.gameMaster);
   }
 
   onClose(connection: Party.Connection<{name?: string}>): void | Promise<void> {
+    if (connection === this.NConnection) {
+      this.NConnection = null;
+    } else if (connection === this.SConnection) {
+      this.SConnection = null;
+    }
     BroadcastManager.broadcastLeaveMessage(this.party, connection);
     BroadcastManager.broadcastPresence(this.party);
   }
@@ -133,13 +125,7 @@ export default class Server implements Party.Server {
       case ROOM_MESSAGE_TYPE.join: {
         const joinMessage = zodJoinRoomMessageDto.parse(json);
         this.setConnectionState(sender, {name: joinMessage.name});
-        const data: ChatMessage = {
-          type: 'chat',
-          messageType: 'presence',
-          sender: 'system',
-          message: `${joinMessage.name} joined`,
-        };
-        this.party.broadcast(JSON.stringify(data));
+        BroadcastManager.broadcastJoinMessage(this.party, sender);
         BroadcastManager.broadcastPresence(this.party);
         break;
       }
@@ -148,45 +134,6 @@ export default class Server implements Party.Server {
 
   private setConnectionState(connection: Party.Connection, state: object) {
     connection.setState({...connection.state, ...state});
-  }
-
-  private async broadcastGameState() {
-    this.broadcastGameStateForNPlayer();
-    this.broadcastGameStateForSPlayer();
-  }
-
-  private async broadcastGameStateForNPlayer() {
-    if (this.gameMaster === null) return;
-    if (this.NConnection === null || this.SConnection === null) return;
-    const data: SyncGameMessage = {
-      type: ROOM_MESSAGE_TYPE.syncGame,
-      sender: 'system',
-      message: 'game started',
-      gameState: {
-        chestInfo: this.gameMaster.getChestInfoByPlayer('N'),
-        waitingFor: this.gameMaster.whatShouldDoNext(),
-        position: 'N',
-        score: this.gameMaster.score,
-      },
-    };
-    this.party.broadcast(JSON.stringify(data), [this.SConnection.id]);
-  }
-
-  private async broadcastGameStateForSPlayer() {
-    if (this.gameMaster === null) return;
-    if (this.NConnection === null || this.SConnection === null) return;
-    const data: SyncGameMessage = {
-      type: ROOM_MESSAGE_TYPE.syncGame,
-      sender: 'system',
-      message: 'game started',
-      gameState: {
-        chestInfo: this.gameMaster.getChestInfoByPlayer('S'),
-        waitingFor: this.gameMaster.whatShouldDoNext(),
-        position: 'S',
-        score: this.gameMaster.score,
-      },
-    };
-    this.party.broadcast(JSON.stringify(data), [this.NConnection.id]);
   }
 
   async onStart() {

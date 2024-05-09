@@ -17,10 +17,10 @@ interface Props {
   onClick?: () => void;
 }
 
-const Chest: React.FC<Props> = props => {
+const Chest: React.FC<Props> = ({showStones = true, ...props}) => {
   return (
     <div className="flex flex-col items-center space-y-2">
-      {props.showStones && (
+      {showStones && (
         <>
           <Stone
             selected={props.selected}

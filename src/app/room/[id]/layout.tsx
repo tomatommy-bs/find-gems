@@ -23,33 +23,37 @@ export default function RootLayout({
     <Provider>
       <Party id={id} />
       <div className="flex h-full flex-col space-y-4">
-        <div className="flex items-center space-x-4">
-          <Link href={'/'}>
-            <button className="btn btn-outline h-fit">
-              <ArrowLeftStartOnRectangleIcon className="w-8" />
-            </button>
-          </Link>
-          <p className="space-x-4">
-            <div className="inline-flex flex-col justify-start">
+        <div className="flex justify-between">
+          <span className="flex space-x-4">
+            <Link href={'/'}>
+              <button className="btn btn-outline h-fit">
+                <ArrowLeftStartOnRectangleIcon className="w-8" />
+              </button>
+            </Link>
+            <p className="space-x-4">
+              <div className="inline-flex flex-col justify-start">
+                <button
+                  className="btn btn-outline btn-xs"
+                  onClick={() => navigator.clipboard.writeText(id)}
+                >
+                  copy ID
+                </button>
+                <span className="text-xs">Room : {id}</span>
+              </div>
               <button
                 className="btn btn-outline btn-xs"
-                onClick={() => navigator.clipboard.writeText(id)}
+                onClick={() =>
+                  navigator.clipboard.writeText(window.location.href)
+                }
               >
-                copy ID
+                copy URL
               </button>
-              <span className="text-xs">Room : {id}</span>
-            </div>
-            <button
-              className="btn btn-outline btn-xs"
-              onClick={() =>
-                navigator.clipboard.writeText(window.location.href)
-              }
-            >
-              copy URL
-            </button>
-          </p>
+            </p>
+          </span>
+          <span>
+            <Presence />
+          </span>
         </div>
-        <Presence />
         <div className="grow overflow-scroll">{children}</div>
       </div>
     </Provider>

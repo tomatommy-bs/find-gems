@@ -61,6 +61,7 @@ const HowToModal: React.FC = () => {
 export const HowToModalTrigger: React.FC<Props> = props => {
   return (
     <button
+      className="btn btn-circle btn-neutral btn-sm"
       onClick={() => {
         const modal = document.getElementById(
           'how-to-modal'
