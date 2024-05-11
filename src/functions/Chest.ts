@@ -1,7 +1,7 @@
 import {Gem, GemPattern} from '@/src/types/game';
 import {ChestDirection} from './constants';
-import {Player} from './Player';
 import {shiftArray} from './utils';
+import {PlayerPosition} from './Player';
 
 /**
  * 下図は direction: 'NE' の場合のパターン
@@ -36,8 +36,8 @@ type Direction = ChestDirection;
 export class Chest {
   public readonly gemPattern: GemPattern;
   public readonly direction: Direction;
-  public readonly stones: Player[] = [];
-  public checkedBy: Player | null = null;
+  public readonly stones: PlayerPosition[] = [];
+  public checkedBy?: PlayerPosition = undefined;
   private readonly patternNumberMap: Record<GemPattern, [Gem, Gem, Gem, Gem]> =
     {
       '0': [0, 0, 0, 0],
@@ -59,7 +59,7 @@ export class Chest {
     this.direction = args.direction;
   }
 
-  public putStone(player: Player) {
+  public putStone(player: PlayerPosition) {
     if (this.stones.length >= 2) throw new Error(`Chest already has 2 stones!`);
 
     if (this.stones.length === 1) {
@@ -70,8 +70,8 @@ export class Chest {
     this.stones.push(player);
   }
 
-  public checkNumberOfGems(player: Player): number {
-    if (this.checkedBy !== null)
+  public checkNumberOfGems(player: PlayerPosition): number {
+    if (this.checkedBy != undefined)
       throw new Error(`Chest already checked by ${this.checkedBy}!`);
     this.checkedBy = player;
     return this.getNumberOfGems();
@@ -92,13 +92,12 @@ export class Chest {
     return shiftArray(stonesOnNE, rotate) as [Gem, Gem, Gem, Gem];
   }
 
-  public showGems(player: Player): {
+  public showGems(player: PlayerPosition): {
     visible: [Gem, Gem];
     secret?: [Gem, Gem];
   } {
-    const playerDirection = player.position;
     const gemsOnDirection = this.getGemsOnDirection();
-    switch (playerDirection) {
+    switch (player) {
       case 'N':
         return {
           visible: [gemsOnDirection[2], gemsOnDirection[3]],
@@ -112,12 +111,12 @@ export class Chest {
     }
   }
 
-  public getTopStone(): Player | null {
+  public getTopStone(): PlayerPosition | null {
     if (this.stones.length === 0) return null;
     return this.stones[this.stones.length - 1];
   }
 
-  public getBelongsTo(): Player | null {
+  public getBelongsTo(): PlayerPosition | null {
     return this.getTopStone();
   }
 }

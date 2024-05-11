@@ -4,6 +4,7 @@ import {useState} from 'react';
 import {ChestInfoKnownByPlayer, WAITING_FOR_STATE} from '@/src/types/game';
 import {checkChest, nextGame, putStone} from '../functions';
 import {Chest} from '@/src/functions/Chest';
+import {PLAYER_POSITION} from '@/src/functions/Player';
 
 export const useGame = (args: {id: string}) => {
   const {id} = args;
@@ -90,28 +91,29 @@ const judgeCanDoAction = (args: {
   switch (waitingFor) {
     case WAITING_FOR_STATE.NCheckChest:
       return {
-        check: position === 'N',
+        check: position === PLAYER_POSITION.N,
         putTopStone: filledFalse,
         putBottomStone: filledFalse,
       };
     case WAITING_FOR_STATE.SCheckChest:
       return {
-        check: position === 'S',
+        check: position === PLAYER_POSITION.S,
         putTopStone: filledFalse,
         putBottomStone: filledFalse,
       };
     case WAITING_FOR_STATE.NPutStone: {
-      if (position === 'S')
+      if (position === PLAYER_POSITION.S)
         return {
           check: false,
           putTopStone: filledFalse,
           putBottomStone: filledFalse,
         };
-      if (position === 'N') {
+      if (position === PLAYER_POSITION.N) {
         const putTopStone =
           args.chests?.map(
             chest =>
-              chest.stones[0] != undefined && chest.stones[0].position === 'S'
+              chest.stones[0] != undefined &&
+              chest.stones[0] === PLAYER_POSITION.S
           ) ?? filledFalse;
         const putBottomStone =
           args.chests?.map(chest => chest.stones[0] == undefined) ??
@@ -120,17 +122,18 @@ const judgeCanDoAction = (args: {
       }
     }
     case WAITING_FOR_STATE.SPutStone:
-      if (position === 'N')
+      if (position === PLAYER_POSITION.N)
         return {
           check: false,
           putTopStone: filledFalse,
           putBottomStone: filledFalse,
         };
-      if (position === 'S') {
+      if (position === PLAYER_POSITION.S) {
         const putTopStone =
           args.chests?.map(
             chest =>
-              chest.stones[0] != undefined && chest.stones[0].position === 'N'
+              chest.stones[0] != undefined &&
+              chest.stones[0] === PLAYER_POSITION.N
           ) ?? filledFalse;
         const putBottomStone =
           args.chests?.map(chest => chest.stones[0] == undefined) ??

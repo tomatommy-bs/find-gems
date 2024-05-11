@@ -31,8 +31,8 @@ const GamePage = ({params}: {params: {id: string}}) => {
             }
             selected={game.selectedChest === index}
             onClick={() => game.clickChest(index)}
-            checkedBy={chest.checkedBy?.position}
-            stones={chest.stones.map(stone => stone.position)}
+            checkedBy={chest.checkedBy}
+            stones={chest.stones}
             number={chest.number}
             disabledChest={!game.canCheckChest}
             disabledStoneTop={!game.canPutTopStone[index]}
@@ -46,7 +46,9 @@ const GamePage = ({params}: {params: {id: string}}) => {
           disabled={!game.canSubmit}
           onClick={game.submit}
         >
-          ok
+          {game.gameState?.waitingFor !== WAITING_FOR_STATE.nextGame
+            ? 'ok'
+            : 'start next game'}
         </button>
       </div>
     </div>

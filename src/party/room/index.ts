@@ -21,13 +21,14 @@ import {
 import {GameMaster} from '@/src/functions/GameMaster';
 import {FORCE_CLIENT_ACT_MESSAGE, WAITING_FOR_STATE} from '@/src/types/game';
 import {BroadcastManager} from './broadcastManager';
+import {PLAYER_POSITION} from '@/src/functions/Player';
 
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Party) {}
 
   gameMaster: GameMaster = new GameMaster();
-  NConnection: Party.Connection | null = null;
-  SConnection: Party.Connection | null = null;
+  NConnection: Party.Connection<ConnectionState> | null = null;
+  SConnection: Party.Connection<ConnectionState> | null = null;
 
   private saveGameMaster() {
     this.party.storage.put('gameMaster', this.gameMaster);
@@ -39,7 +40,14 @@ export default class Server implements Party.Server {
 
     switch (command) {
       case WAITING_FOR_STATE.startGame: {
-        this.gameMaster.startGame();
+        if (this.NConnection === null || this.SConnection === null)
+          throw new Error('Not enough players');
+        this.gameMaster.startGame({
+          players: [
+            {name: this.NConnection?.state?.name, id: this.NConnection?.id},
+            {name: this.SConnection?.state?.name, id: this.SConnection?.id},
+          ],
+        });
         BroadcastManager.broadcastForceClientAct(
           this.party,
           FORCE_CLIENT_ACT_MESSAGE.jumpToGamePage
@@ -48,7 +56,7 @@ export default class Server implements Party.Server {
       }
       case WAITING_FOR_STATE.NCheckChest: {
         const data = zodCheckChestDto.parse(json);
-        this.gameMaster?.checkChest('N', data.chestIndex);
+        this.gameMaster?.checkChest(PLAYER_POSITION.N, data.chestIndex);
         break;
       }
       case WAITING_FOR_STATE.SCheckChest: {

@@ -1,6 +1,7 @@
 import {WAITING_FOR_STATE, waitingForState} from '@/src/types/game';
 import {Board} from './Board';
 import _ from 'lodash';
+import {Player, PLAYER_POSITION, PlayerPosition} from './Player';
 
 const INITIAL_SCORE = {
   N: 0,
@@ -9,41 +10,60 @@ const INITIAL_SCORE = {
 
 export class GameMaster {
   private board: Board;
+  public playerOnN: Player = new Player({name: 'N', position: 'N'});
+  public playerOnS: Player = new Player({name: 'S', position: 'S'});
+  private waitingFor: waitingForState = WAITING_FOR_STATE.startGame;
+  private isNPlayerFirst = this.decideFirstPlayerRandomly();
   public score = _.cloneDeep(INITIAL_SCORE);
+
   constructor() {
-    this.board = new Board({isNPlayerFirst: this.decideFirstPlayerRandomly()});
+    this.board = new Board();
   }
 
-  public startGame() {
-    const isNPlayerFirst = this.decideFirstPlayerRandomly();
+  public startGame(args: {players: {name?: string; id?: string}[]}) {
+    if (args.players.length !== 2)
+      throw new Error('The number of players must be 2');
+    const players = _.shuffle(args.players);
+    this.playerOnN = new Player({
+      name: players[0].name ?? 'N',
+      position: PLAYER_POSITION.N,
+      id: players[0].id,
+    });
+    this.playerOnS = new Player({
+      name: players[1].name ?? 'S',
+      position: PLAYER_POSITION.S,
+      id: players[1].id,
+    });
     this.score = _.cloneDeep(INITIAL_SCORE);
-    this.board = new Board({isNPlayerFirst});
+    this.board = new Board();
+    this.updateWaitingForState();
   }
 
-  public checkChest(playerPosition: 'N' | 'S', chestIndex: number) {
+  public checkChest(playerPosition: PlayerPosition, chestIndex: number) {
     if (
-      playerPosition === 'N' &&
-      this.board.waitingFor !== WAITING_FOR_STATE.NCheckChest
+      playerPosition === PLAYER_POSITION.N &&
+      this.waitingFor !== WAITING_FOR_STATE.NCheckChest
     )
       throw new Error("It's not your turn to check the chest");
     if (
-      playerPosition === 'S' &&
-      this.board.waitingFor !== WAITING_FOR_STATE.SCheckChest
+      playerPosition === PLAYER_POSITION.S &&
+      this.waitingFor !== WAITING_FOR_STATE.SCheckChest
     )
       throw new Error("It's not your turn to check the chest");
 
-    return this.board.checkNumberOfGemsInAChest(chestIndex, playerPosition);
+    this.board.checkNumberOfGemsInAChest(chestIndex, playerPosition);
+    this.updateWaitingForState();
   }
 
-  public putStone(playerPosition: 'N' | 'S', chestIndex: number) {
+  public putStone(playerPosition: PlayerPosition, chestIndex: number) {
     if (
-      playerPosition === 'N' &&
-      this.board.waitingFor !== WAITING_FOR_STATE.NPutStone
+      playerPosition === PLAYER_POSITION.N &&
+      this.waitingFor !== WAITING_FOR_STATE.NPutStone
     )
       throw new Error("It's not your turn to put the stone");
     if (
-      playerPosition === 'S' &&
-      this.board.waitingFor !== WAITING_FOR_STATE.SPutStone
+      playerPosition === PLAYER_POSITION.S &&
+      this.waitingFor !== WAITING_FOR_STATE.SPutStone
     )
       throw new Error("It's not your turn to put the stone");
 
@@ -52,26 +72,32 @@ export class GameMaster {
     if (wonBy != null) {
       this.score[wonBy] += 1;
     }
+    this.updateWaitingForState();
   }
 
   public nextGame() {
     const wonBy = this.getWonBy();
     if (wonBy == null) throw new Error('The game is not finished yet.');
-    const wonByN = wonBy === 'N';
-
-    this.board = new Board({isNPlayerFirst: wonByN});
+    this.isNPlayerFirst = wonBy === PLAYER_POSITION.N;
+    this.board = new Board();
+    this.updateWaitingForState();
   }
 
-  public getChestInfoByPlayer(playerPosition: 'N' | 'S') {
-    const chestInfo = this.board.getChestInfoByPlayer(playerPosition);
-    if (this.getWonBy() == null) {
-      chestInfo.forEach(chest => delete chest.secretGems);
-    }
-    return chestInfo;
+  public getChestInfoByPlayer(playerPosition: PlayerPosition) {
+    const player =
+      playerPosition === PLAYER_POSITION.N ? this.playerOnN : this.playerOnS;
+    return this.board.chests.map(chest => ({
+      gems: chest.showGems(player.position).visible,
+      secretGems: chest.showGems(player.position).secret,
+      stones: chest.stones,
+      checkedBy: chest.checkedBy,
+      number:
+        chest.checkedBy === player.position ? chest.getNumberOfGems() : null,
+    }));
   }
 
   public whatShouldDoNext(): waitingForState {
-    return this.board.waitingFor;
+    return this.waitingFor;
   }
 
   /**
@@ -116,5 +142,72 @@ export class GameMaster {
   private decideFirstPlayerRandomly(): boolean {
     const isNPlayerFirst = Math.random() < 0.5;
     return isNPlayerFirst;
+  }
+
+  private updateWaitingForState(): void {
+    const numberOfCheckedChest =
+      this.board.getCheckedChests(PLAYER_POSITION.N).length +
+      this.board.getCheckedChests(PLAYER_POSITION.S).length;
+    const numberOfStonesOnChests = _.sumBy(
+      this.board.chests,
+      chest => chest.stones.length
+    );
+    const numberOfChestOfNPlayer = this.board.chests.filter(
+      chest => chest.getBelongsTo() === PLAYER_POSITION.N
+    ).length;
+    const numberOfChestOfSPlayer = this.board.chests.filter(
+      chest => chest.getBelongsTo() === PLAYER_POSITION.S
+    ).length;
+
+    if (this.isFinished()) {
+      this.waitingFor = WAITING_FOR_STATE.nextGame;
+      return;
+    }
+
+    switch (numberOfCheckedChest) {
+      case 0:
+        this.waitingFor = this.isNPlayerFirst
+          ? WAITING_FOR_STATE.NCheckChest
+          : WAITING_FOR_STATE.SCheckChest;
+        return;
+      case 1:
+        this.waitingFor = this.isNPlayerFirst
+          ? WAITING_FOR_STATE.SCheckChest
+          : WAITING_FOR_STATE.NCheckChest;
+        return;
+      case 2:
+        break;
+    }
+
+    let isTurnOfNPlayer = this.isNPlayerFirst;
+    if (numberOfStonesOnChests % 2 !== 0) isTurnOfNPlayer = !isTurnOfNPlayer;
+    switch (isTurnOfNPlayer) {
+      case true:
+        if (numberOfChestOfNPlayer === 2) isTurnOfNPlayer = !isTurnOfNPlayer;
+        break;
+      case false:
+        this.waitingFor = WAITING_FOR_STATE.SPutStone;
+        if (numberOfChestOfSPlayer === 2) isTurnOfNPlayer = !isTurnOfNPlayer;
+        break;
+    }
+
+    this.waitingFor = isTurnOfNPlayer
+      ? WAITING_FOR_STATE.NPutStone
+      : WAITING_FOR_STATE.SPutStone;
+  }
+
+  public isFinished(): boolean {
+    const {N, S} = this.getPlayersChest();
+    return N.length + S.length === 4;
+  }
+
+  private getPlayersChest() {
+    const N = this.board.chests.filter(
+      chest => chest.getBelongsTo() === PLAYER_POSITION.N
+    );
+    const S = this.board.chests.filter(
+      chest => chest.getBelongsTo() === PLAYER_POSITION.S
+    );
+    return {N, S};
   }
 }
