@@ -1,9 +1,4 @@
 'use client';
-import {
-  ArrowLeftStartOnRectangleIcon,
-  HomeIcon,
-  QuestionMarkCircleIcon,
-} from '@heroicons/react/16/solid';
 import {Provider} from 'jotai';
 import Link from 'next/link';
 import Party from './_components/Party';
@@ -11,6 +6,7 @@ import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
 import Presence from './_components/Presence';
 import {DevTools} from 'jotai-devtools';
 import 'jotai-devtools/styles.css';
+import {IconDoorExit} from '@tabler/icons-react';
 
 export default function RootLayout({
   children,
@@ -30,7 +26,7 @@ export default function RootLayout({
           <span className="flex space-x-4">
             <Link href={'/'}>
               <button className="btn btn-outline h-fit">
-                <ArrowLeftStartOnRectangleIcon className="w-8" />
+                <IconDoorExit className="w-8" />
               </button>
             </Link>
             <p className="space-x-4">

@@ -1,17 +1,6 @@
 'use client';
 
-import {PARTYKIT_HOST, PARTYKIT_URL} from '@/src/app/env';
-import Button from '@/src/components/Button';
-import Card from '@/src/components/Card';
-import Input from '@/src/components/Input';
-import {
-  ArrowLeftStartOnRectangleIcon,
-  PaperAirplaneIcon,
-  ShieldExclamationIcon,
-} from '@heroicons/react/16/solid';
-import usePartySocket from 'partysocket/react';
 import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
-import {ChatMessage, RoomMessage, SyncGameMessage} from '@/src/party/room/type';
 import {startGame} from './functions';
 import {useAtomValue} from 'jotai';
 import {
@@ -20,7 +9,6 @@ import {
   partySocketAtom,
   presenceAtom,
 } from './contexts';
-import {useRouter} from 'next/navigation';
 
 export default function RoomPage({params}: {params: {id: string}}) {
   const chats = useAtomValue(chatAtom);

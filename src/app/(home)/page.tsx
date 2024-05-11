@@ -3,9 +3,9 @@
 import RoomMaker from '@/src/app/_components/RoomMaker';
 import Card from '@/src/components/Card';
 import {useEffect} from 'react';
-import {PencilIcon, PencilSquareIcon} from '@heroicons/react/16/solid';
 import Cookies from 'js-cookie';
 import {useForceUpdate} from '@mantine/hooks';
+import {IconPencil} from '@tabler/icons-react';
 
 const modalName = 'name-modal';
 
@@ -48,7 +48,7 @@ export default function Home() {
       {name !== '' && (
         <div role="alert" className="alert">
           <button className="btn btn-square btn-xs" onClick={openModal}>
-            <PencilSquareIcon />
+            <IconPencil />
           </button>
           <p>hello, {name}! 👋</p>
         </div>

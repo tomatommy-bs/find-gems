@@ -1,12 +1,5 @@
-import {useCounter} from '@mantine/hooks';
+import {IconArrowRight, IconPlus} from '@tabler/icons-react';
 import Chest from './Chest';
-import {
-  ArrowRightCircleIcon,
-  ArrowRightIcon,
-  PlusIcon,
-  UserCircleIcon,
-} from '@heroicons/react/16/solid';
-import {Player} from '@/src/functions/Player';
 import PlayerBadge from '@/src/components/Player';
 
 interface Props {
@@ -114,7 +107,7 @@ const Page2: React.FC = () => {
       <div className="my-4 flex items-center space-x-2">
         <Chest topGems={[1, 0]} showStones={false} />
         <span className="relative w-12 text-center">
-          <ArrowRightIcon className="mx-auto h-8" />
+          <IconArrowRight className="mx-auto h-8" />
           <span className="absolute inset-x-0 bottom-0 translate-y-1/2 text-xs">
             check!
           </span>
@@ -173,12 +166,12 @@ const Page3: React.FC = () => {
       <div className="flex justify-evenly">
         <div className="flex items-center justify-center space-x-2">
           <Chest topGems={[1, 0]} stones={['N']} />
-          <ArrowRightIcon className="mx-auto h-8" />
+          <IconArrowRight className="mx-auto h-8" />
           <PlayerBadge name="John" position="N" />
         </div>
         <div className="flex items-center justify-center space-x-2">
           <Chest topGems={[1, 0]} stones={['N', 'S']} />
-          <ArrowRightIcon className="mx-auto h-8" />
+          <IconArrowRight className="mx-auto h-8" />
           <PlayerBadge name="Bob" position="S" />
         </div>
       </div>
@@ -195,7 +188,7 @@ const Page4: React.FC = () => {
           <PlayerBadge name="John" position="N" />
           <div className="flex items-center space-x-2">
             <Chest topGems={[1, 0]} bottomGems={[0, 1]} showStones={false} />
-            <PlusIcon className="h-8" />
+            <IconPlus className="h-8" />
             <Chest topGems={[1, 0]} bottomGems={[1, 1]} showStones={false} />
           </div>
         </div>
@@ -205,7 +198,7 @@ const Page4: React.FC = () => {
           <PlayerBadge name="Bob" position="S" />
           <div className="mt-4 flex items-center space-x-2">
             <Chest topGems={[1, 1]} bottomGems={[1, 1]} showStones={false} />
-            <PlusIcon className="h-8" />
+            <IconPlus className="h-8" />
             <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
           </div>
         </div>
@@ -220,7 +213,7 @@ const Page4: React.FC = () => {
           <PlayerBadge name="John" position="N" />
           <div className="mt-4 flex items-center space-x-2">
             <Chest topGems={[1, 0]} bottomGems={[0, 1]} showStones={false} />
-            <PlusIcon className="h-8" />
+            <IconPlus className="h-8" />
             <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
           </div>
         </div>
@@ -229,7 +222,7 @@ const Page4: React.FC = () => {
           <PlayerBadge name="Bob" position="S" />
           <div className="mt-4 flex items-center space-x-2">
             <Chest topGems={[1, 1]} bottomGems={[1, 1]} showStones={false} />
-            <PlusIcon className="h-8" />
+            <IconPlus className="h-8" />
             <Chest topGems={[1, 0]} bottomGems={[1, 0]} showStones={false} />
           </div>
         </div>

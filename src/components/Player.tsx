@@ -1,4 +1,4 @@
-import {UserCircleIcon} from '@heroicons/react/16/solid';
+import {IconUserCircle} from '@tabler/icons-react';
 
 interface Props {
   position?: string;
@@ -16,8 +16,8 @@ const PlayerBadge: React.FC<Props> = props => {
         )}
         <div className="badge badge-neutral pl-0">
           <div className="avatar">
-            <div className="mask mask-circle w-8 bg-neutral text-orange-300">
-              <UserCircleIcon />
+            <div className="mask mask-circle bg-neutral">
+              <IconUserCircle className="size-8 text-orange-300" />
             </div>
           </div>
           <span>{name}</span>

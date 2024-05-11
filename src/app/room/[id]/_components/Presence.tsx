@@ -1,6 +1,5 @@
 import {useAtomValue} from 'jotai';
 import {presenceAtom} from '../contexts';
-import {UserCircleIcon} from '@heroicons/react/16/solid';
 import PlayerBadge from '@/src/components/Player';
 
 const Presence: React.FC = () => {
