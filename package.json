@@ -1,6 +1,10 @@
 {
-  "name": "partypolls",
+  "name": "find-gems",
   "version": "0.1.0",
+  "author": {
+    "name": "tomatommy-bs",
+    "url": "https://github.com/tomatommy-bs"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
