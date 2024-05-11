@@ -47,8 +47,8 @@ const HowToModal: React.FC = () => {
 const Page1: React.FC = () => {
   return (
     <section className="space-y-2">
-      <p>this is a game where you have to guess the gems in the chest.</p>
-      <p>there are 6 types of chest.</p>
+      <p>This is a game where you have to guess the gems in the chest.</p>
+      <p>There are 6 types of chests.</p>
       <div className="flex justify-evenly">
         <Chest bottomGems={[0, 0]} topGems={[0, 0]} showStones={false} />
         <Chest bottomGems={[0, 0]} topGems={[0, 1]} showStones={false} />
@@ -57,10 +57,10 @@ const Page1: React.FC = () => {
         <Chest bottomGems={[0, 1]} topGems={[1, 1]} showStones={false} />
         <Chest bottomGems={[1, 1]} topGems={[1, 1]} showStones={false} />
       </div>
-      <p>but each player can see each side of gems</p>
+      <p>But each player can see one side of chests.</p>
       <p>
-        for example ... if player <span className="badge badge-neutral">A</span>{' '}
-        can see such as below
+        For example, if player <span className="badge badge-neutral">A</span>{' '}
+        can see the following:
       </p>
       <div className="flex justify-evenly">
         <Chest bottomGems={[0, 0]} showStones={false} />
@@ -71,8 +71,8 @@ const Page1: React.FC = () => {
         <Chest bottomGems={[1, 1]} showStones={false} />
       </div>
       <p>
-        and player <span className="badge badge-neutral">B</span> can see such
-        as below
+        And player <span className="badge badge-neutral">B</span> can see the
+        following:
       </p>
       <div className="flex justify-evenly">
         <Chest topGems={[0, 0]} showStones={false} />
@@ -82,7 +82,7 @@ const Page1: React.FC = () => {
         <Chest topGems={[0, 0]} showStones={false} />
         <Chest topGems={[1, 0]} showStones={false} />
       </div>
-      <p>the chests are set by randomly ordered and randomly rotated.</p>
+      <p>The chests are randomly ordered and randomly rotated.</p>
     </section>
   );
 };
@@ -90,9 +90,9 @@ const Page1: React.FC = () => {
 const Page2: React.FC = () => {
   return (
     <section className="space-y-2">
-      <p>At first, you can check the chest by clicking it.</p>
-      <p>then, you will can get the number of gems the chest has.</p>
-      <p>the number will help you guess how many gems the chest has</p>
+      <p>Initially, you can check the chest by clicking it.</p>
+      <p>Then, you will receive the number of gems the chest has.</p>
+      <p>This number will help you guess how many gems the chest has.</p>
       <div className="my-4 flex items-center space-x-2">
         <Chest topGems={[1, 0]} showStones={false} />
         <span className="text-4xl">=</span>
@@ -109,7 +109,7 @@ const Page2: React.FC = () => {
         <span className="relative w-12 text-center">
           <IconArrowRight className="mx-auto h-8" />
           <span className="absolute inset-x-0 bottom-0 translate-y-1/2 text-xs">
-            check!
+            Check!
           </span>
         </span>
         <Chest topGems={[1, 0]} number={2} showStones={false} />
@@ -129,11 +129,11 @@ const Page2: React.FC = () => {
         />
       </div>
       <p>
-        Second, enemy also check the one of the chest exclude you have already
-        chosen one.
+        Secondly, the opponent also checks one of the chests, excluding the one
+        you have already chosen.
       </p>
       <p>
-        Finally, you will see the chest such as below. This is one of the
+        Finally, you will see the chest as follows, which is one of the
         examples.
       </p>
       <div className="my-4 flex items-center justify-evenly">
@@ -151,18 +151,18 @@ const Page2: React.FC = () => {
 const Page3: React.FC = () => {
   return (
     <section className="space-y-2">
-      <p>Next, you guys should put stones on the chest.</p>
+      <p>Next, both players should place stones on the chests.</p>
       <ol className="ml-8 list-decimal">
         <li>The chest with your stone on top belongs to you.</li>
         <li>You can stack up to two stones on the chest.</li>
-        <li>A player must get two chests.</li>
+        <li>A player must obtain two chests.</li>
         <li>The players must take turns placing stones.</li>
         <li>
-          If one player has already placed two stones on the chest, the another
+          If one player has already placed two stones on the chest, the other
           player can continue to place stones.
         </li>
       </ol>
-      <p>For example ...</p>
+      <p>For example:</p>
       <div className="flex justify-evenly">
         <div className="flex items-center justify-center space-x-2">
           <Chest topGems={[1, 0]} stones={['N']} />
@@ -182,7 +182,7 @@ const Page3: React.FC = () => {
 const Page4: React.FC = () => {
   return (
     <section className="space-y-2">
-      <p>Finally, the player get the larger mount of gems will win 🎉</p>
+      <p>Finally, the player with the greater number of gems will win 🎉</p>
       <div className="flex items-center justify-center space-x-2">
         <div className="space-y-4">
           <PlayerBadge name="John" position="N" />
@@ -204,8 +204,8 @@ const Page4: React.FC = () => {
         </div>
       </div>
       <p>
-        But notice, the player get the <strong>both of two gems chests</strong>{' '}
-        will win finally
+        But note, the player who obtains{' '}
+        <strong>both of the chests with two gems</strong> will win in the end.
       </p>
       <div className="flex items-center justify-center space-x-2">
         <div className="relative rounded-md bg-green-200 p-2">
@@ -218,7 +218,7 @@ const Page4: React.FC = () => {
           </div>
         </div>
         <span className="mt-8 text-4xl">{'<'}</span>
-        <div className=" rounded-md">
+        <div className="rounded-md">
           <PlayerBadge name="Bob" position="S" />
           <div className="mt-4 flex items-center space-x-2">
             <Chest topGems={[1, 1]} bottomGems={[1, 1]} showStones={false} />
