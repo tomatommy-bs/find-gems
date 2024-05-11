@@ -92,14 +92,23 @@ export class Chest {
     return shiftArray(stonesOnNE, rotate) as [Gem, Gem, Gem, Gem];
   }
 
-  public showGems(player: Player): [Gem, Gem] {
+  public showGems(player: Player): {
+    visible: [Gem, Gem];
+    secret?: [Gem, Gem];
+  } {
     const playerDirection = player.position;
     const gemsOnDirection = this.getGemsOnDirection();
     switch (playerDirection) {
       case 'N':
-        return [gemsOnDirection[2], gemsOnDirection[3]];
+        return {
+          visible: [gemsOnDirection[2], gemsOnDirection[3]],
+          secret: [gemsOnDirection[0], gemsOnDirection[1]],
+        };
       case 'S':
-        return [gemsOnDirection[0], gemsOnDirection[1]];
+        return {
+          visible: [gemsOnDirection[0], gemsOnDirection[1]],
+          secret: [gemsOnDirection[2], gemsOnDirection[3]],
+        };
     }
   }
 

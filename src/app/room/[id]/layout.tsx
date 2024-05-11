@@ -10,6 +10,7 @@ import Party from './_components/Party';
 import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
 import Presence from './_components/Presence';
 import {DevTools} from 'jotai-devtools';
+import 'jotai-devtools/styles.css';
 
 export default function RootLayout({
   children,

@@ -23,9 +23,11 @@ const GamePage = ({params}: {params: {id: string}}) => {
         {game.gameState?.chestInfo.map((chest, index) => (
           <Chest
             key={index}
-            topGems={game.gameState?.position === 'N' ? chest.gems : undefined}
+            topGems={
+              game.gameState?.position === 'N' ? chest.gems : chest.secretGems
+            }
             bottomGems={
-              game.gameState?.position === 'S' ? chest.gems : undefined
+              game.gameState?.position === 'S' ? chest.gems : chest.secretGems
             }
             selected={game.selectedChest === index}
             onClick={() => game.clickChest(index)}

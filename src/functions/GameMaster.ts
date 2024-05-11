@@ -63,7 +63,11 @@ export class GameMaster {
   }
 
   public getChestInfoByPlayer(playerPosition: 'N' | 'S') {
-    return this.board.getChestInfoByPlayer(playerPosition);
+    const chestInfo = this.board.getChestInfoByPlayer(playerPosition);
+    if (this.getWonBy() == null) {
+      chestInfo.forEach(chest => delete chest.secretGems);
+    }
+    return chestInfo;
   }
 
   public whatShouldDoNext(): waitingForState {

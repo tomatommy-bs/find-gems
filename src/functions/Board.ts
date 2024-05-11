@@ -64,7 +64,8 @@ export class Board {
   ): ChestInfoKnownByPlayer[] {
     const player = playerPosition === 'N' ? this.playerOnN : this.playerOnS;
     return this.chests.map(chest => ({
-      gems: chest.showGems(player),
+      gems: chest.showGems(player).visible,
+      secretGems: chest.showGems(player).secret,
       stones: chest.stones,
       checkedBy: chest.checkedBy,
       number: chest.checkedBy === player ? chest.getNumberOfGems() : null,

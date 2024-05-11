@@ -12,10 +12,11 @@ export type Gem = z.infer<typeof zodGem>;
 export const zodChestInfoKnownByPlayer = z.object({
   /** 宝石の配置 */
   gems: z.tuple([zodGem, zodGem]),
+  secretGems: z.tuple([zodGem, zodGem]).optional(),
   stones: z.array(z.instanceof(Player)),
   /** そのチェストを調査したプレイヤー */
   checkedBy: z.instanceof(Player).nullable(),
-  /** そのチェストに入っている宝石の数を知っているプレイヤー */
+  /** そのチェストに入っている宝石の数 */
   number: z.number().nullable(),
 });
 export type ChestInfoKnownByPlayer = z.infer<typeof zodChestInfoKnownByPlayer>;
