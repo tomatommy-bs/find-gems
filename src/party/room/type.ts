@@ -1,3 +1,4 @@
+import {PLAYER_POSITION} from '@/src/functions/Player';
 import {
   FORCE_CLIENT_ACT_MESSAGE,
   WAITING_FOR_STATE,
@@ -134,11 +135,12 @@ export const zodSyncGameMessage = zodRoomMessage.extend({
       WAITING_FOR_STATE.nextGame,
       WAITING_FOR_STATE.restartGame,
     ]),
-    position: z.enum(['N', 'S']),
+    position: z.enum([PLAYER_POSITION.N, PLAYER_POSITION.S]),
     score: z.object({
       N: z.number(),
       S: z.number(),
     }),
+    wonBy: z.enum([PLAYER_POSITION.N, PLAYER_POSITION.S]).optional(),
   }),
 });
 export type SyncGameMessage = z.infer<typeof zodSyncGameMessage>;

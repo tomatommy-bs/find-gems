@@ -1,7 +1,11 @@
 import {useAtomValue} from 'jotai';
 import {gameStateAtom, presenceAtom} from '../contexts';
 import {useState} from 'react';
-import {ChestInfoKnownByPlayer, WAITING_FOR_STATE} from '@/src/types/game';
+import {
+  ChestInfoKnownByPlayer,
+  PlayerPosition,
+  WAITING_FOR_STATE,
+} from '@/src/types/game';
 import {checkChest, nextGame, putStone} from '../functions';
 import {Chest} from '@/src/functions/Chest';
 import {PLAYER_POSITION} from '@/src/functions/Player';
@@ -46,6 +50,7 @@ export const useGame = (args: {id: string}) => {
       waitingFor: gameState?.waitingFor,
       nPlayerName: presence.find(p => p.position === 'N')?.name,
       sPlayerName: presence.find(p => p.position === 'S')?.name,
+      wonBy: gameState?.wonBy,
     }),
     selectedChest,
     canCheckChest: canDoAction.check,
@@ -63,8 +68,13 @@ const convertWaitingForToMessage = (args: {
   waitingFor?: string;
   nPlayerName?: string;
   sPlayerName?: string;
+  wonBy?: PlayerPosition;
 }) => {
-  const {waitingFor, nPlayerName, sPlayerName} = args;
+  const {waitingFor, nPlayerName, sPlayerName, wonBy} = args;
+  const name: Record<PlayerPosition, string | undefined> = {
+    N: nPlayerName,
+    S: sPlayerName,
+  };
   switch (waitingFor) {
     case WAITING_FOR_STATE.NCheckChest:
       return `${nPlayerName}, please check a chest`;
@@ -73,11 +83,13 @@ const convertWaitingForToMessage = (args: {
     case WAITING_FOR_STATE.NPutStone:
       return `${nPlayerName}, please put a stone`;
     case WAITING_FOR_STATE.SPutStone:
-      return `${sPlayerName} player, please put a stone`;
+      return `${sPlayerName}, please put a stone`;
     case WAITING_FOR_STATE.restartGame:
       return 'Game is over. Please restart the game';
     case WAITING_FOR_STATE.nextGame:
-      return 'Game is over. Please click ok';
+      return `Won by ${name[wonBy!]} 🎉 Please start the next game`;
+    case WAITING_FOR_STATE.startGame:
+      return 'please start the game';
   }
 };
 

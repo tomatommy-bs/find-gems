@@ -114,8 +114,6 @@ export class GameMaster {
    * あるプレイヤー視点で見えるチェストの情報を取得する
    * 1. ゲーム終了していない場合, 対面の宝石は見えない
    * 2. ゲーム終了している場合, 対面の宝石も見える
-   * 3. ゲーム終了していない場合, 宝石の数はチェック済みのチェストのみ見える
-   * 4. ゲーム終了している場合, 全てのチェストの宝石の数が見える
    */
   public getChestInfoByPlayer(
     playerPosition: PlayerPosition
@@ -136,10 +134,7 @@ export class GameMaster {
           : undefined,
     }));
     if (!isFinished) {
-      info.forEach(chest => {
-        delete chest.secretGems;
-        if (chest.checkedBy !== playerPosition) delete chest.number;
-      });
+      info.forEach(chest => delete chest.secretGems);
     }
     return info;
   }
@@ -162,10 +157,10 @@ export class GameMaster {
     const nScore = _.sum(N.map(chest => chest.getNumberOfGems()));
     const sScore = _.sum(S.map(chest => chest.getNumberOfGems()));
     if (having2GemPlayer != null) return having2GemPlayer;
-    if (nScore > sScore) return 'N';
-    if (nScore < sScore) return 'S';
-    if ((NMax || 0) > (SMax || 0)) return 'N';
-    if ((NMax || 0) < (SMax || 0)) return 'S';
+    if (nScore > sScore) return PLAYER_POSITION.N;
+    if (nScore < sScore) return PLAYER_POSITION.S;
+    if ((NMax || 0) > (SMax || 0)) return PLAYER_POSITION.N;
+    if ((NMax || 0) < (SMax || 0)) return PLAYER_POSITION.S;
     return null;
   }
 

@@ -10,6 +10,7 @@ import {
 } from './type';
 import {FORCE_CLIENT_ACT_MESSAGE, WAITING_FOR_STATE} from '@/src/types/game';
 import {GameMaster} from '@/src/functions/GameMaster';
+import {PLAYER_POSITION} from '@/src/functions/Player';
 
 export class BroadcastManager {
   static async broadcastForceClientAct(
@@ -80,26 +81,33 @@ export class BroadcastManager {
     const sConnection = connections.find(c => c.state?.position === 'S');
     if (nConnection === undefined || sConnection === undefined) return;
 
-    const dataForN: SyncGameMessage = {
+    const base: SyncGameMessage = {
       type: ROOM_MESSAGE_TYPE.syncGame,
       sender: 'system',
       message: 'game state updated',
       gameState: {
-        chestInfo: gameMaster.getChestInfoByPlayer('N'),
+        chestInfo: [],
         waitingFor: gameMaster.whatShouldDoNext(),
         position: 'N',
         score: gameMaster.score,
+        wonBy: gameMaster.getWonBy() ?? undefined,
+      },
+    };
+
+    const dataForN: SyncGameMessage = {
+      ...base,
+      gameState: {
+        ...base.gameState,
+        position: PLAYER_POSITION.N,
+        chestInfo: gameMaster.getChestInfoByPlayer(PLAYER_POSITION.N),
       },
     };
     const dataForS: SyncGameMessage = {
-      type: ROOM_MESSAGE_TYPE.syncGame,
-      sender: 'system',
-      message: 'game state updated',
+      ...base,
       gameState: {
-        chestInfo: gameMaster.getChestInfoByPlayer('S'),
-        waitingFor: gameMaster.whatShouldDoNext(),
-        position: 'S',
-        score: gameMaster.score,
+        ...base.gameState,
+        position: PLAYER_POSITION.S,
+        chestInfo: gameMaster.getChestInfoByPlayer(PLAYER_POSITION.S),
       },
     };
     party.broadcast(JSON.stringify(dataForN), [sConnection.id]);
