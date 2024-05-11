@@ -2,6 +2,7 @@ import './globals.css';
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import ToolBox from '../components/ToolBox';
+import {Analytics} from '@vercel/analytics/react';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -29,6 +30,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body className={inter.className}>
         <div className="flex h-screen w-screen justify-start">
           <ToolBox />
+          <Analytics />
           <main className="mx-auto w-screen p-4 md:w-2/3 md:p-8 xl:w-1/2">
             {children}
           </main>

@@ -17,6 +17,7 @@
   "dependencies": {
     "@mantine/hooks": "^7.9.1",
     "@tabler/icons-react": "^3.3.0",
+    "@vercel/analytics": "^1.2.2",
     "jotai": "^2.8.0",
     "jotai-devtools": "^0.9.1",
     "js-cookie": "^3.0.5",
