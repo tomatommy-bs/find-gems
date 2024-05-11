@@ -51,7 +51,7 @@ export class Board {
       secretGems: chest.showGems(player).secret,
       stones: chest.stones,
       checkedBy: chest.checkedBy,
-      number: chest.checkedBy === player ? chest.getNumberOfGems() : null,
+      number: chest.checkedBy === player ? chest.getNumberOfGems() : undefined,
     }));
   }
 
