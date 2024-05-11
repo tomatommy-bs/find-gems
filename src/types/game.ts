@@ -23,7 +23,7 @@ export const zodChestInfoKnownByPlayer = z.object({
   /** そのチェストを調査したプレイヤー */
   checkedBy: zodPlayerPosition.optional(),
   /** そのチェストに入っている宝石の数 */
-  number: z.number().nullable(),
+  number: z.number().optional(),
 });
 export type ChestInfoKnownByPlayer = z.infer<typeof zodChestInfoKnownByPlayer>;
 

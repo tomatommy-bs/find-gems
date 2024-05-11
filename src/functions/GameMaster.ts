@@ -1,4 +1,8 @@
-import {WAITING_FOR_STATE, waitingForState} from '@/src/types/game';
+import {
+  ChestInfoKnownByPlayer,
+  WAITING_FOR_STATE,
+  waitingForState,
+} from '@/src/types/game';
 import {Board} from './Board';
 import _ from 'lodash';
 import {Player, PLAYER_POSITION, PlayerPosition} from './Player';
@@ -20,7 +24,13 @@ export class GameMaster {
     this.board = new Board();
   }
 
-  public startGame(args: {players: {name?: string; id?: string}[]}) {
+  /**
+   * ゲーム開始
+   * - ボードを初期化
+   * - 点数を初期化
+   * - プレイヤーを初期化
+   */
+  public startGame(args: {players: {name?: string; id?: string}[]}): void {
     if (args.players.length !== 2)
       throw new Error('The number of players must be 2');
     const players = _.shuffle(args.players);
@@ -39,7 +49,12 @@ export class GameMaster {
     this.updateWaitingForState();
   }
 
-  public checkChest(playerPosition: PlayerPosition, chestIndex: number) {
+  /**
+   * @rules
+   * 1. チェストの中身を確認する
+   * 2. 既にチェック済みのチェストは確認できない
+   */
+  public checkChest(playerPosition: PlayerPosition, chestIndex: number): void {
     if (
       playerPosition === PLAYER_POSITION.N &&
       this.waitingFor !== WAITING_FOR_STATE.NCheckChest
@@ -55,7 +70,13 @@ export class GameMaster {
     this.updateWaitingForState();
   }
 
-  public putStone(playerPosition: PlayerPosition, chestIndex: number) {
+  /**
+   * @rules
+   * 1. 石を置く
+   * 2. 一番上の石が自分の石である場合, 置くことができない
+   * 3. 一つのチェストには最大2つの石しか置けない
+   */
+  public putStone(playerPosition: PlayerPosition, chestIndex: number): void {
     if (
       playerPosition === PLAYER_POSITION.N &&
       this.waitingFor !== WAITING_FOR_STATE.NPutStone
@@ -75,7 +96,13 @@ export class GameMaster {
     this.updateWaitingForState();
   }
 
-  public nextGame() {
+  /**
+   * @rules
+   * 1. 次のゲームに進む
+   * 2. 前回のゲームの勝者が先攻
+   * 3. ボードを初期化
+   */
+  public nextGame(): void {
     const wonBy = this.getWonBy();
     if (wonBy == null) throw new Error('The game is not finished yet.');
     this.isNPlayerFirst = wonBy === PLAYER_POSITION.N;
@@ -83,17 +110,38 @@ export class GameMaster {
     this.updateWaitingForState();
   }
 
-  public getChestInfoByPlayer(playerPosition: PlayerPosition) {
+  /**
+   * あるプレイヤー視点で見えるチェストの情報を取得する
+   * 1. ゲーム終了していない場合, 対面の宝石は見えない
+   * 2. ゲーム終了している場合, 対面の宝石も見える
+   * 3. ゲーム終了していない場合, 宝石の数はチェック済みのチェストのみ見える
+   * 4. ゲーム終了している場合, 全てのチェストの宝石の数が見える
+   */
+  public getChestInfoByPlayer(
+    playerPosition: PlayerPosition
+  ): ChestInfoKnownByPlayer[] {
+    const isFinished = this.isFinished();
     const player =
       playerPosition === PLAYER_POSITION.N ? this.playerOnN : this.playerOnS;
-    return this.board.chests.map(chest => ({
+    const info: ChestInfoKnownByPlayer[] = this.board.chests.map(chest => ({
       gems: chest.showGems(player.position).visible,
-      secretGems: chest.showGems(player.position).secret,
+      secretGems: isFinished
+        ? chest.showGems(player.position).secret
+        : undefined,
       stones: chest.stones,
       checkedBy: chest.checkedBy,
       number:
-        chest.checkedBy === player.position ? chest.getNumberOfGems() : null,
+        chest.checkedBy === player.position
+          ? chest.getNumberOfGems()
+          : undefined,
     }));
+    if (!isFinished) {
+      info.forEach(chest => {
+        delete chest.secretGems;
+        if (chest.checkedBy !== playerPosition) delete chest.number;
+      });
+    }
+    return info;
   }
 
   public whatShouldDoNext(): waitingForState {
@@ -106,7 +154,7 @@ export class GameMaster {
    * 2. いない場合, gems の合計数が多い方が勝ち,
    * 3. 同数の場合, 大きい gem を持っている方が勝ち
    */
-  public getWonBy(): 'N' | 'S' | null {
+  public getWonBy(): PlayerPosition | null {
     const {N, S} = this.board.getPlayersChest();
     if (N.length < 2 || S.length < 2) return null;
     const {N: NMax, S: SMax} = this.getPlayersMaxGem();
@@ -121,7 +169,7 @@ export class GameMaster {
     return null;
   }
 
-  private getHaving2GemPlayer(): 'N' | 'S' | null {
+  private getHaving2GemPlayer(): PlayerPosition | null {
     const {N, S} = this.board.getPlayersChest();
     if (N.length !== 2 || S.length !== 2) return null;
 
