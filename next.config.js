@@ -4,6 +4,7 @@ const nextConfig = {
     serverActions: true,
     typedRoutes: true,
   },
+  transpilePackages: ['jotai-devtools'],
 };
 
 module.exports = nextConfig;

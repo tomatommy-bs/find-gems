@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Party from './_components/Party';
 import HowToModal, {HowToModalTrigger} from './_components/HowToModal';
 import Presence from './_components/Presence';
+import {DevTools} from 'jotai-devtools';
 
 export default function RootLayout({
   children,
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <Provider>
       <Party id={id} />
+      <DevTools />
       <div className="flex h-full flex-col space-y-4">
         <div className="flex justify-between">
           <span className="flex space-x-4">
