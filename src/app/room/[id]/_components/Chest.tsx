@@ -1,11 +1,12 @@
 import {Player} from '@/src/functions/Player';
-import {Gem} from '@/src/types/game';
+import {Gem as TGem} from '@/src/types/game';
 import {number} from 'zod';
 import Stone from './Stone';
+import Gem from './Gem';
 
 interface Props {
-  topGems?: [Gem, Gem];
-  bottomGems?: [Gem, Gem];
+  topGems?: [TGem, TGem];
+  bottomGems?: [TGem, TGem];
   checkedBy?: Player['position'];
   stones?: Player['position'][];
   selected?: boolean;
@@ -46,20 +47,20 @@ const Chest: React.FC<Props> = ({showStones = true, ...props}) => {
           <span className="badge indicator-item badge-secondary">?</span>
         )}
         <button
-          className={`btn btn-square content-between py-1 ${props.selected ? 'btn-accent' : ''}`}
+          className={`btn btn-square content-between py-1 ${props.selected ? 'btn-accent' : ''} border-2 border-yellow-800 bg-yellow-100 hover:border-yellow-800 hover:bg-yellow-400`}
           disabled={props.disabledChest}
           onClick={props.onClick}
         >
           <span className="space-x-2">
             {props.topGems ? (
               <>
-                <span>{props.topGems[0]}</span>
-                <span>{props.topGems[1]}</span>
+                <span>{<Gem visible={props.topGems[0] == 1} />}</span>
+                <span>{<Gem visible={props.topGems[1] == 1} />}</span>
               </>
             ) : (
               <>
-                <span>?</span>
-                <span>?</span>
+                <Gem type="unknown" />
+                <Gem type="unknown" />
               </>
             )}
           </span>
@@ -67,13 +68,13 @@ const Chest: React.FC<Props> = ({showStones = true, ...props}) => {
           <span className="space-x-2">
             {!props.bottomGems ? (
               <>
-                <span>?</span>
-                <span>?</span>
+                <Gem type="unknown" />
+                <Gem type="unknown" />
               </>
             ) : (
               <>
-                <span>{props.bottomGems[0]}</span>
-                <span>{props.bottomGems[1]}</span>
+                <span>{<Gem visible={props.bottomGems[0] == 1} />}</span>
+                <span>{<Gem visible={props.bottomGems[1] == 1} />}</span>
               </>
             )}
           </span>
