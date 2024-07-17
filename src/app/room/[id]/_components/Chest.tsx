@@ -47,7 +47,7 @@ const Chest: React.FC<Props> = ({showStones = true, ...props}) => {
           <span className="badge indicator-item badge-secondary">?</span>
         )}
         <button
-          className={`btn btn-square content-between py-1 ${props.selected ? 'btn-accent' : ''} border-2 border-yellow-800 bg-yellow-100 hover:border-yellow-800 hover:bg-yellow-400`}
+          className={`btn btn-square content-between border-yellow-800 py-1 ${props.selected ? 'bg-yellow-400' : 'bg-yellow-100'} border-2  hover:border-yellow-800 hover:bg-yellow-400 disabled:text-opacity-100`}
           disabled={props.disabledChest}
           onClick={props.onClick}
         >
