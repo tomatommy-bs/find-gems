@@ -47,6 +47,9 @@ const HowToModal: React.FC = () => {
 const Page1: React.FC = () => {
   return (
     <section className="space-y-2">
+      <p>
+        This game is <strong>for two players 👤👤</strong>
+      </p>
       <p>This is a game where you have to guess the gems in the chest.</p>
       <p>There are 6 types of chests.</p>
       <div className="flex justify-evenly">

@@ -47,12 +47,18 @@ export default function RoomPage({params}: {params: {id: string}}) {
         ))}
       </div>
 
+      {presence.length < 2 && (
+        <p className="text-center text-white">
+          Waiting for more players to join
+          <span className="loading loading-dots loading-xs mx-2"></span>
+        </p>
+      )}
       <button
         className="btn btn-block"
         onClick={handleStartGame}
         disabled={presence.length < 2}
       >
-        start game
+        {presence.length < 2 ? 'It require two players' : 'Start game'}
       </button>
     </div>
   );

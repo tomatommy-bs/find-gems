@@ -8,7 +8,6 @@ const inter = Inter({subsets: ['latin']});
 
 const openGraphImage = {
   title: 'Instant, real-time polls built with PartyKit',
-  cta: 'Create your own poll now',
 };
 
 export const metadata: Metadata = {
@@ -18,7 +17,8 @@ export const metadata: Metadata = {
     'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>💎</text></svg>',
   openGraph: {
     title: 'FIND GEMS 💎',
-    description: "This is online board game, Let's find some gems!",
+    description:
+      "This is online board game, Let's find some gems! This is a game for two players 👤👤",
     type: 'website',
     images: [`/api/og?${new URLSearchParams(openGraphImage)}`],
   },
