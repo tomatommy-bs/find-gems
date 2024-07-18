@@ -1,6 +1,11 @@
 'use client';
 
-import {useColorScheme, useFullscreen, useOrientation} from '@mantine/hooks';
+import {
+  useColorScheme,
+  useFullscreen,
+  useOrientation,
+  useOs,
+} from '@mantine/hooks';
 import {use} from 'react';
 import HowToModal, {
   HowToModalTrigger,
@@ -14,12 +19,16 @@ import Link from 'next/link';
 
 const ToolBox: React.FC = () => {
   const {toggle, fullscreen} = useFullscreen();
+  const os = useOs();
 
   return (
     <div className="absolute right-0 flex flex-col space-y-2 p-4">
-      <button className="btn btn-square btn-ghost btn-sm" onClick={toggle}>
-        {fullscreen ? <IconArrowsMinimize /> : <IconArrowsMaximize />}
-      </button>
+      {/* iOS は全画面表示 API を提供してないらしい */}
+      {os !== 'ios' && (
+        <button className="btn btn-square btn-ghost btn-sm" onClick={toggle}>
+          {fullscreen ? <IconArrowsMinimize /> : <IconArrowsMaximize />}
+        </button>
+      )}
       <HowToModalTrigger>
         <IconQuestionMark />
       </HowToModalTrigger>
