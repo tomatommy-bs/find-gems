@@ -13,6 +13,7 @@ import HowToModal, {
 import {
   IconArrowsMaximize,
   IconArrowsMinimize,
+  IconBrandX,
   IconQuestionMark,
 } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -22,36 +23,22 @@ const ToolBox: React.FC = () => {
   const os = useOs();
 
   return (
-    <div className="absolute right-0 flex flex-col space-y-2 p-4">
-      {/* iOS は全画面表示 API を提供してないらしい */}
-      {os !== 'ios' && (
-        <button className="btn btn-square btn-ghost btn-sm" onClick={toggle}>
-          {fullscreen ? <IconArrowsMinimize /> : <IconArrowsMaximize />}
-        </button>
-      )}
-      <HowToModalTrigger>
-        <IconQuestionMark />
-      </HowToModalTrigger>
-      <Link href={'https://twitter.com/TomaTommy123'} target="_blank">
-        <i>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#2c3e50"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-            <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-          </svg>
-        </i>
-      </Link>
-      <HowToModal />
+    <div className="absolute right-0">
+      <div className="flex flex-col items-center space-y-2 p-4">
+        {/* iOS は全画面表示 API を提供してないらしい */}
+        {os !== 'ios' && (
+          <button className="btn btn-square btn-ghost btn-sm" onClick={toggle}>
+            {fullscreen ? <IconArrowsMinimize /> : <IconArrowsMaximize />}
+          </button>
+        )}
+        <HowToModalTrigger>
+          <IconQuestionMark />
+        </HowToModalTrigger>
+        <Link href={'https://twitter.com/TomaTommy123'} target="_blank">
+          <IconBrandX />
+        </Link>
+        <HowToModal />
+      </div>
     </div>
   );
 };
