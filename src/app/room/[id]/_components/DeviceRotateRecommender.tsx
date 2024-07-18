@@ -14,7 +14,7 @@ import {useShouldRotate} from '@/src/hooks/use-should-rotate';
 const modal_ID = 'device_rotate_recommender';
 
 const DeviceRotateRecommender: React.FC = () => {
-  const shouldRotate = useShouldRotate({});
+  const {shouldRotate} = useShouldRotate({});
 
   const [shouldShow, setShouldShow] = useSessionStorage({
     key: 'shouldShowRotateRecommender',
